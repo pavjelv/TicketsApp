@@ -26,6 +26,7 @@ routes(router)
 /** set up middlewares */
 app.use(cors())
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended : false}));
 app.use(helmet())
 //app.use('/static',express.static(path.join(__dirname,'static')))
 
