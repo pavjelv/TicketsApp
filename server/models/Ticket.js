@@ -34,19 +34,12 @@ TicketSchema.methods.resolve = function(isResolved = true) {
     this.isResolved = isResolved;
     return this.save()
 }
-TicketSchema.methods.getUserTickets = function(_id) {
-    Ticket.find({'reporter' : _id}).then((ticket) => {
-        return ticket
-    })
-}
-TicketSchema.methods.getAssignedTickets = function(_id) {
-    Ticket.find({'assignee' : _id}).then((ticket) => {
-        return ticket
-    })
-}
 TicketSchema.methods.getAllTickets = function() {
     Ticket.find({'isResolved' : false}).then((ticket) => {
         return ticket
     })
 }
+TicketSchema.methods.getId = function(assigneeId) {
+    return this.assignee._id == assigneeId
+} 
 module.exports = mongoose.model('Ticket', TicketSchema);
