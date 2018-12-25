@@ -72,14 +72,26 @@ module.exports = {
     },
 
     getMyTickets: (req, res, next) => {
-        Ticket.find({"reporter": {"id" : req.body.id}})
+        Ticket.find({})
         .populate('assignee')
         .exec((err, ticket) => {
-            if(err){
+            if(err) {
                 res.send(err)
             }
-            res.send(ticket)
+            else if (!ticket) {
+                res.send(404)
+            }
+            else {
+            let tickets = []
+            for(let i = 0; i < ticket.length; i++) {
+                let tckt = ticket[i];
+                if(tckt.reporter._id == req.body.id) {
+                    tickets.push(tckt)
+                }
+            }
+            res.send(tickets)
             next()
+        }
         })
     },
 
@@ -93,14 +105,16 @@ module.exports = {
             else if (!ticket)
                 res.send(404)
             else {
-                //let ass = db.Ticket.find().toArray();
-                res.send(ticket)
+                let tickets = [];
+                for(let i = 0; i < ticket.length; i++) {
+                    let tckt = ticket[i];
+                    if (tckt.assignee._id == req.body.id) {
+                        tickets.push(tckt)
+                    }
+                }
+                res.send(tickets)
             }
             next()     
-            //if(ticket.assignee._id == req.body.id) {
-               // res.send(ticket)
-              //  next()
-            //}
         })
     }
 
