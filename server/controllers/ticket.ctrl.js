@@ -61,7 +61,8 @@ module.exports = {
     getAll: (req, res, next) => {
         Ticket.find({})
         .populate('reporter')
-        .populate('assignee').exec((err, ticket)=> {
+        .populate('assignee')
+        .exec((err, ticket)=> {
             if (err)
                 res.send(err)
             else if (!ticket)

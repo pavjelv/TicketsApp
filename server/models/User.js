@@ -18,4 +18,4 @@ UserSchema.methods.getUser = function (firstName) {
         return user
     })
 }
-module.exports = mongoose.model('User', UserSchema)
+module.exports = mongoose.model('UserBase', UserSchema)

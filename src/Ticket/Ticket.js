@@ -11,7 +11,7 @@ class Ticket extends Component {
 
       async componentDidMount() {
         const { match: { params } } = this.props;
-        const ticket = (await axios.get(`http://localhost:5000/api/getTicket/${params.id}`)).data;
+        const ticket = (await axios.get(`http://localhost:5000/api/tickets/getTicket/${params.id}`)).data;
         this.setState({
           ticket,
         });

@@ -5,12 +5,12 @@ let TicketSchema = new Schema({
     title: {type: String, required: false},
     reporter: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'UserBase'
     },
     description: {type: String, required: true},
     assignee: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'UserBase'
     },
     answer: {type: String, require: false},
     isResolved: {type: Boolean}

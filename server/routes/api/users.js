@@ -2,7 +2,11 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const router = require('express').Router();
 const auth = require('../auth');
-//const Users = mongoose.model('Users');
+const ticketController = require ('../../controllers/ticket.ctrl')
+const userController = require ('../../controllers/user.ctrl')
+const multipart = require ('connect-multiparty')
+const multipartWare = multipart()
+
 const Users = require('../../models/Users')
 
 

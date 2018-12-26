@@ -12,7 +12,7 @@ class Tickets extends Component {
     }
 
     async componentDidMount() {
-        const tickets = (await axios.get(`http://localhost:5000/api/allTickets`)).data;
+        const tickets = (await axios.get(`http://localhost:5000/api/tickets/allTickets`)).data;
         this.setState({
             tickets,
         });
