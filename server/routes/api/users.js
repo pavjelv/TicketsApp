@@ -5,13 +5,12 @@ const auth = require('../auth');
 //const Users = mongoose.model('Users');
 const Users = require('../../models/Users')
 
+
 //POST new user route (optional, everyone has access)
 router.post('/', auth.optional, (req, res, next) => {
- // const { body: { user } } = req;
-   // user = req.body.email;
     let user = ({
-        email: "123@123.com",
-        password: "test"
+        email: req.body.email,
+        password: req.body.password
     })
   if(!user.email) {
     return res.status(422).json({
