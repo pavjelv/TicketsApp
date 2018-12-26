@@ -1,6 +1,13 @@
 const user = require('./user')
 const ticket = require('./ticket')
-module.exports = (router) => {
-    user(router)
-    ticket(router)
-}
+const express = require('express')
+const router = express.Router()
+
+router.use('/api', require('./api'))
+
+module.exports = router;
+
+// module.exports = (router) => {
+//     user(router)
+//     ticket(router)
+// }

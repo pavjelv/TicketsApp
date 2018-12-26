@@ -8,7 +8,8 @@ let UserSchema = new mongoose.Schema (
         lastName: String,
         phone: Number,
         token: String,
-        role: String
+        role: String,
+        email: String
     }
 )
 

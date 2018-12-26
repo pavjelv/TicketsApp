@@ -29,12 +29,13 @@ class Ticket extends Component {
                 <p className="lead">{ticket.description}</p>
                 <hr className="my-4" />
                 {!ticket.assignee && 
-                    <p>No one has assigned to this ticket.. Yet </p>
+                    <p>No one has assigned to this ticket... Yet </p>
                 }
                 {ticket.assignee &&
                     <p>Assignee: {ticket.assignee.firstName} {ticket.assignee.lastName}</p>
                 }
-                <p>Answer: {ticket.answer}</p>
+                <p>Answer: </p>
+                <p> {ticket.answer}</p>
                 {/* {
                   question.answers.map((answer, idx) => (
                     <p className="lead" key={idx}>{answer.answer}</p>
