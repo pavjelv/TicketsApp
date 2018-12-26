@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 let TicketSchema = new Schema({
+    title: {type: String, required: false},
     reporter: {
         type: Schema.Types.ObjectId,
         ref: 'User'
