@@ -6,6 +6,7 @@ module.exports = {
     addTicket: (req, res, next) => {
         let ticket = new Ticket (
             {
+                title: req.body.title,
                 description: req.body.description,
                 answer: req.body.answer,
                 isResolved: false
@@ -49,7 +50,7 @@ module.exports = {
     },
 
     resolve: (req, res, next) => {
-        Ticket.update({_id: req.body.ticketId}, {$set:{"isResolved": req.body.isResolved}}, function(err, ticket) {
+        Ticket.update({_id: req.body.ticketId}, {$set:{"isResolved": "true"}}, function(err, ticket) {
             if(err) {
                 return next(err)
             }
@@ -59,6 +60,20 @@ module.exports = {
 
     getAll: (req, res, next) => {
         Ticket.find({})
+        .populate('reporter')
+        .populate('assignee').exec((err, ticket)=> {
+            if (err)
+                res.send(err)
+            else if (!ticket)
+                res.status(404).send()
+            else
+                res.send(ticket)
+            next()            
+        })
+    },
+
+    getTicket: (req,res, next) => {
+        Ticket.findById(req.params.id)
         .populate('reporter')
         .populate('assignee').exec((err, ticket)=> {
             if (err)

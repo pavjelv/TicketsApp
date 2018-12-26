@@ -7,8 +7,12 @@ module.exports = (router) => {
         .route('/allTickets')
         .get(ticketController.getAll)
 
+    router
+        .route('/getTicket/:id')
+        .get(ticketController.getTicket)
+    
     router 
-        .route('/ticket')
+        .route('/addTicket')
         .post(multipartWare, ticketController.addTicket)
 
     router

@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 function NavBar() {
     return (
         <nav className="navbar navbar-dark bg-primary fixed-top">
-            <Link className="navbar-brand" to="/api/allTickets">
+            <Link className="navbar-brand" to="/">
                 Ticket app
             </Link>
         </nav>
