@@ -1,5 +1,6 @@
 const express = require("express")
 const routes = require('./routes/')
+const morgan = require('morgan');
 const mongoose = require('mongoose')
 const cors = require('cors')
 const bodyParser = require('body-parser')
@@ -25,6 +26,7 @@ routes(router)
 
 /** set up middlewares */
 app.use(cors())
+app.use(morgan('combined'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended : false}));
 app.use(helmet())

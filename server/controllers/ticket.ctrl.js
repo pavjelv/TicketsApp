@@ -19,7 +19,7 @@ module.exports = {
                 if (err)
                     res.send(err)
                 else if (!ticket)
-                    res.send(400)
+                res.status(400).send()
                 else {
                     return ticket.addReporter(req.body.reporterId).then((_ticket) => {
                         return res.send(_ticket)
@@ -35,7 +35,7 @@ module.exports = {
             if(err) {
                 return next(err)
             }
-            res.send(200)
+            res.status(200).send()
         })
     },
 
@@ -44,7 +44,7 @@ module.exports = {
             if(err) {
                 return next(err)
             }
-            res.send(200)
+            res.status(200).send()
         })
     },
 
@@ -53,7 +53,7 @@ module.exports = {
             if(err) {
                 return next(err)
             }
-            res.send(200)
+            res.status(200).send()
         })
     },
 
@@ -64,7 +64,7 @@ module.exports = {
             if (err)
                 res.send(err)
             else if (!ticket)
-                res.send(404)
+                res.status(404).send()
             else
                 res.send(ticket)
             next()            
@@ -78,7 +78,7 @@ module.exports = {
             if (err)
                 res.send(err)
             else if (!ticket)
-                res.send(404)
+                res.status(404).send()
             else
                 res.send(ticket)
             next()            
@@ -92,7 +92,7 @@ module.exports = {
             if (err)
                 res.send(err)
             else if (!ticket)
-                res.send(404)
+            res.status(404).send()
             else { 
             let tickets = []
             for(let i = 0; i < ticket.length; i++) {
@@ -115,7 +115,7 @@ module.exports = {
                 res.send(err)
             }
             else if (!ticket) {
-                res.send(404)
+                res.status(404).send()
             }
             else {
             let tickets = []
@@ -138,7 +138,7 @@ module.exports = {
             if (err)
                 res.send(err)
             else if (!ticket)
-                res.send(404)
+            res.status(404).send()
             else { 
             let tickets = []
             for(let i = 0; i < ticket.length; i++) {
@@ -161,7 +161,7 @@ module.exports = {
             if (err)
                 res.send(err)
             else if (!ticket)
-                res.send(404)
+            res.status(404).send()
             else {
                 let tickets = [];
                 for(let i = 0; i < ticket.length; i++) {
