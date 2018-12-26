@@ -71,6 +71,42 @@ module.exports = {
         })
     },
 
+    getAllUnresolved: (req,res, next) => {
+        Ticket.find({"isResolved": false})
+        .populate('reporter')
+        .populate('assignee').exec((err, ticket)=> {
+            if (err)
+                res.send(err)
+            else if (!ticket)
+                res.send(404)
+            else
+                res.send(ticket)
+            next()            
+        })
+    },
+
+    getMyUnresolvedTickets: (req,res, next) => {
+        Ticket.find({"isResolved": false})
+        .populate('reporter')
+        .populate('assignee').exec((err, ticket)=> {
+            if (err)
+                res.send(err)
+            else if (!ticket)
+                res.send(404)
+            else { 
+            let tickets = []
+            for(let i = 0; i < ticket.length; i++) {
+                let tckt = ticket[i];
+                if(tckt.reporter._id == req.body.id) {
+                    tickets.push(tckt)
+                }
+            }
+            res.send(tickets)
+            next()
+        }      
+        })
+    },
+
     getMyTickets: (req, res, next) => {
         Ticket.find({})
         .populate('assignee')
@@ -92,6 +128,28 @@ module.exports = {
             res.send(tickets)
             next()
         }
+        })
+    },
+
+    getAssinedUnresolvedTickets: (req, res, next) => {
+        Ticket.find({"isResolved": false})
+        .populate('reporter')
+        .populate('assignee').exec((err, ticket)=> {
+            if (err)
+                res.send(err)
+            else if (!ticket)
+                res.send(404)
+            else { 
+            let tickets = []
+            for(let i = 0; i < ticket.length; i++) {
+                let tckt = ticket[i];
+                if(tckt.assigne._id == req.body.id) {
+                    tickets.push(tckt)
+                }
+            }
+            res.send(tickets)
+            next()
+        }      
         })
     },
 

@@ -30,4 +30,16 @@ module.exports = (router) => {
     router
         .route('/answer')
         .post(ticketController.addAnswer)
+
+    router
+        .route('/getAllUnresolved')
+        .get(ticketController.getAllUnresolved)
+
+    router 
+        .route('/getAssignedUnresolved')
+        .post(ticketController.getAssinedUnresolvedTickets)
+
+    router
+        .route('/getReportedUnresolved')
+        .post(ticketController.getMyUnresolvedTickets)
 }
