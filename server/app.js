@@ -7,6 +7,7 @@ const bodyParser = require('body-parser')
 const path = require('path');
 const helmet = require('helmet')
 const session = require('express-session')
+const passport = require('passport')
 mongoose.promise = global.Promise;
 const app = express()
 const router = express.Router()
@@ -19,6 +20,7 @@ app.use(bodyParser.urlencoded({extended : false}));
 app.use(helmet());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({secret: 'my-secret-word', cookie: {maxAge: 60000}, resave:false, saveUninitialized: false}));
+app.use(passport.initialize());
 
 
 /** connect to MongoDB datastore */
