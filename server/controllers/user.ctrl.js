@@ -35,7 +35,8 @@ module.exports = {
                 lastName: req.body.lastName,
                 phone: req.body.phone,
                 token: "STDAFX.H",
-                role: req.body.role
+                role: req.body.role,
+                email: req.body.email
             }
         );
         

@@ -8,6 +8,7 @@ class Tickets extends Component {
 
         this.state = {
             tickets: null,
+            credentials: {},
         };
     }
 
@@ -15,6 +16,7 @@ class Tickets extends Component {
         const tickets = (await axios.get(`http://localhost:5000/api/tickets/allTickets`)).data;
         this.setState({
             tickets,
+            credentials: JSON.parse(localStorage.getItem('credentials')),
         });
     }
 
@@ -22,29 +24,21 @@ class Tickets extends Component {
         return (
             <div className="container">
                 <div className="row">
-                    {this.state.tickets === null && <p>Loading tickets...</p>}
+                    {this.state.tickets === null && <p>Loading tickets... </p>}
                     {
                         this.state.tickets && this.state.tickets.map(ticket => (
                             <div key={ticket._id} className="col-sm-12 col-md-4 col-lg-3">
                             <Link to={`/ticket/${ticket._id}`}>
-                                { !ticket.isResolved && 
-                                    <div className= "card text-white bg-danger mb-3">
-                                     <div className="card-header">Reporter: {ticket.reporter.firstName} {ticket.reporter.lastName}</div>
-                                    <div className="card-body">
-                                    <h4 className="card-title">{ticket.title}</h4>
-                                    <p className="card-text">{ticket.description}</p>
-                                    </div>
-                                </div>
+                             <div className={"card text-white" + (!ticket.isResolved ? ' bg-danger mb-3' : ' bg-success mb-3')}>
+                                <div className="card-header">Reporter: {ticket.reporter.firstName} {ticket.reporter.lastName}</div>
+                                <div className="card-body">
+                                <h4 className="card-title">{ticket.title}</h4>
+                                <p className="card-text">{ticket.description}</p>
+                                { this.state.credentials &&
+                                <p className="card-text">{this.state.credentials.credentials.firstName} {this.state.credentials.credentials.token}</p>
                                 }
-                                {ticket.isResolved === true && 
-                                    <div className= "card text-white bg-success mb-3">
-                                    <div className="card-header">Reporter: {ticket.reporter.firstName} {ticket.reporter.lastName}</div>
-                                    <div className="card-body">
-                                    <h4 className="card-title">{ticket.title}</h4>
-                                    <p className="card-text">{ticket.description}</p>
-                                    </div>
                                 </div>
-                                }
+                            </div>
                             </Link>
                             </div>
                         ))

@@ -8,6 +8,7 @@ const multipart = require ('connect-multiparty')
 const multipartWare = multipart()
 
 const Users = require('../../models/Users')
+const User = require('../../models/User')
 
 
 //POST new user route (optional, everyone has access)
@@ -62,33 +63,44 @@ router.post('/login', auth.optional, (req, res, next) => {
       },
     });
   }
-
-  return passport.authenticate('local', { session: false }, (err, passportUser, info) => {
+  passport.authenticate('local', { session: false }, (err, passportUser, info) => {
     if(err) {
       return next(err);
     }
     if(passportUser) {
       const user = passportUser;
       user.token = passportUser.generateJWT();
-
-      return res.json({ user: user.toAuthJSON() });
+      User.find({"email": user.email}).then((userDetails => {
+            if(userDetails) {
+                let credentials = {
+                    firstName : userDetails[0].firstName,
+                    token : "Token " + user.token
+                }
+                console.log(credentials)
+                //user.email = userDetails.firstName;
+                return res.json({credentials});
+            }
+            return res.status(401).send(info);
+      }))  
     }
-    console.log(info)
-    return res.status(400).send(info);
+    else return res.status(401).send(info);
   })(req, res, next);
 });
 
 //GET current route (required, only authenticated users have access)
 router.get('/current', auth.required, (req, res, next) => {
   const { payload: { id } } = req;
-
   return Users.findById(id)
     .then((user) => {
       if(!user) {
         return res.sendStatus(400);
       }
-
-      return res.json({ user: user.toAuthJSON() });
+      console.log("user");
+      User.find({"email" : user.email})
+      .then((usr)=> {
+          res.send(usr)
+      })
+      //return res.json({ user: user.toAuthJSON() });
     });
 });
 
