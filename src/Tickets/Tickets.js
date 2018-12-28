@@ -39,11 +39,8 @@ class Tickets extends Component {
                              <div className={"card text-white" + (!ticket.isResolved ? ' bg-danger mb-3' : ' bg-success mb-3')}>
                                 <div className="card-header">Reporter: {ticket.reporter.firstName} {ticket.reporter.lastName}</div>
                                 <div className="card-body">
-                                <h4 className="card-title">{ticket.title}</h4>
-                                <p className="card-text">{ticket.description}</p>
-                                { this.state.credentials &&
-                                <p className="card-text">{this.state.credentials.credentials.firstName} {this.state.credentials.credentials.token}</p>
-                                }
+                                <h2 className="card-title">{ticket.title}</h2>
+                                <h4 className="card-text">{ticket.description}</h4>
                                 </div>
                             </div>
                             </Link>

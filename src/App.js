@@ -6,6 +6,7 @@ import Ticket from './Ticket/Ticket';
 import {LoginPage} from './LoginPage/LoginPage'
 import { PrivateRoute } from './Auth/PrivateRoute';
 import NewTicket from './Ticket/NewTicket'
+import UserPage from './UserPage/UserPage'
 // import User from './Auth/Auth';
 
 class App extends Component {
@@ -18,6 +19,7 @@ class App extends Component {
         <Route exact path='/ticket/:id' component={Ticket}/>
         <Route path="/login" component={LoginPage} />
         <PrivateRoute path='/newTicket' component={NewTicket} />
+        <PrivateRoute path='/user/:id' component={UserPage}/>
         {/* <Route exact path='/user' component={User}/> */}
 
       </div>

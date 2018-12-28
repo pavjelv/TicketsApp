@@ -3,18 +3,14 @@ const User = require ('./../models/User')
 const fs = require ('fs')
 
 module.exports = {
+
     getUser: (req, res, next) => {
-        let firstName  =  req.body.firstName
-            findUser({firstName})
-    
-        function findUser(obj) {
-           return User.findById(firstName, function(err, user){
-               if(err) {
-                return next(err);
-               }
-               res.send(user); 
-           })
-        }
+        User.findById(req.body.id).exec((err, user) => {
+            if(err) {
+            return next(err);
+            }
+            res.send(user); 
+        })
     },
 
     getAll: (req, res, next) => {

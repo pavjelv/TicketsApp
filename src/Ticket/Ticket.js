@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import {Link} from 'react-router-dom';
 import SubmitAnswer from '../Ticket/AddAnswer'
 
 class Ticket extends Component {
@@ -53,7 +54,11 @@ class Ticket extends Component {
             <div className="row">
               <div className="jumbotron col-12">
                 <h1 className="display-3">{ticket.title}</h1>
+                { localStorage.getItem('credentials') &&
+                <Link to={`/user/${ticket.reporter._id}`}>
                 <p className="lead">Reporter: {ticket.reporter.firstName} {ticket.reporter.lastName}</p>
+                </Link>
+                }
                 <p className="lead">{ticket.description}</p>
                 <hr className="my-4" />
                 {!ticket.answer &&
@@ -62,15 +67,17 @@ class Ticket extends Component {
                 {!ticket.assignee && 
                     <p>No one has assigned to this ticket... Yet </p>
                 }
-                {ticket.assignee &&
+                {localStorage.getItem('credentials') && ticket.assignee &&
+                    <Link to={`/user/${ticket.assignee._id}`}>
                     <p>Assignee: {ticket.assignee.firstName} {ticket.assignee.lastName}</p>
+                    </Link>
                 }
-                <p>Answer: </p>
-                <p> {ticket.answer}</p>
-                {localStorage.getItem('credentials') && ticket.assignee && ticket.assignee._id === JSON.parse(localStorage.getItem('credentials')).credentials.id && !ticket.isResolved &&
-                    <div>
+                <p>Answer: {ticket.answer}</p>
+                {localStorage.getItem('credentials') && ticket.assignee && ticket.assignee._id === JSON.parse(localStorage.getItem('credentials')).credentials.id && !ticket.isResolved  
+                  ||localStorage.getItem('credentials') && !ticket.isResolved && ticket.reporter._id === JSON.parse(localStorage.getItem('credentials')).credentials.id &&
+                    <p className="lead">                  
                       <button type="button" class="btn btn-success" onClick={() => {this.resolve()}}>Resolve</button>
-                    </div>
+                    </p> 
                 }   
               </div>
             </div>   
