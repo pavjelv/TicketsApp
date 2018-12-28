@@ -131,6 +131,7 @@ module.exports = {
 
     getMyTickets: (req, res, next) => {
         Ticket.find({})
+        .populate('reporter')
         .populate('assignee')
         .exec((err, ticket) => {
             if(err) {
@@ -153,7 +154,7 @@ module.exports = {
         })
     },
 
-    getAssinedUnresolvedTickets: (req, res, next) => {
+    getUnassinedUnresolvedTickets: (req, res, next) => {
         Ticket.find({"isResolved": false})
         .populate('reporter')
         .populate('assignee').exec((err, ticket)=> {
@@ -164,8 +165,7 @@ module.exports = {
             else { 
             let tickets = []
             for(let i = 0; i < ticket.length; i++) {
-                let tckt = ticket[i];
-                if(tckt.assigne._id == req.body.id) {
+                if(!ticket[i].assigne) {
                     tickets.push(tckt)
                 }
             }
@@ -177,8 +177,8 @@ module.exports = {
 
     getAssignedTickets: (req, res, next) => {
         Ticket.find({})
-        .populate ('assignee')
         .populate('reporter')
+        .populate ('assignee')
         .exec((err, ticket) => {
             if (err)
                 res.send(err)
@@ -187,9 +187,10 @@ module.exports = {
             else {
                 let tickets = [];
                 for(let i = 0; i < ticket.length; i++) {
-                    let tckt = ticket[i];
-                    if (tckt.assignee._id == req.body.id) {
-                        tickets.push(tckt)
+                    if(ticket[i].assignee){
+                        if (ticket[i].assignee._id == req.body.id) {
+                             tickets.push(ticket[i])
+                        }
                     }
                 }
                 res.send(tickets)

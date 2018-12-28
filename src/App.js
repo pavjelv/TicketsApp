@@ -7,7 +7,7 @@ import {LoginPage} from './LoginPage/LoginPage'
 import { PrivateRoute } from './Auth/PrivateRoute';
 import NewTicket from './Ticket/NewTicket'
 import UserPage from './UserPage/UserPage'
-// import User from './Auth/Auth';
+import MyTickets from './Tickets/MyTickets'
 
 class App extends Component {
   render() {
@@ -15,6 +15,7 @@ class App extends Component {
       <div>
         <NavBar/>
        
+        <PrivateRoute path='/myTickets' component={MyTickets}/>
         <Route exact path='/' component={Tickets}/>
         <Route exact path='/ticket/:id' component={Ticket}/>
         <Route path="/login" component={LoginPage} />

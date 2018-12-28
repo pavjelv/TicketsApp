@@ -23,7 +23,7 @@ router.post('/answer', auth.required, ticketController.addAnswer)
 
 router.get('/getAllUnresolved', auth.required, ticketController.getAllUnresolved)
 
-router.post('/getAssignedUnresolved', auth.required, ticketController.getAssinedUnresolvedTickets)
+router.post('/getUnassignedUnresolved', auth.required, ticketController.getUnassinedUnresolvedTickets)
 
 router.post('/getReportedUnresolved', auth.required, ticketController.getMyUnresolvedTickets)
 

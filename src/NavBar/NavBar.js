@@ -9,6 +9,28 @@ function NavBar() {
             <Link className="navbar-brand" to="/">
                 Ticket app
             </Link>
+            
+            { localStorage.getItem('credentials') && JSON.parse(localStorage.getItem('credentials')).credentials.role == "User" &&
+                 <div>
+                    <Link to={`/myTickets`}>
+                        <a className="mr-2 text-white ">Reported tickets</a>
+                    </Link>
+                </div>
+            }
+            { localStorage.getItem('credentials') && JSON.parse(localStorage.getItem('credentials')).credentials.role == "Worker" &&
+                 <div>
+                    <Link to={`/myTickets`}>
+                        <a className="mr-2 text-white ">Assigned tickets</a>
+                    </Link>
+                </div>
+            }
+            { localStorage.getItem('credentials') && JSON.parse(localStorage.getItem('credentials')).credentials.role == "Admin" &&
+                 <div>
+                    <Link to={`/myTickets`}>
+                        <a className="mr-2 text-white ">Unresolved and unassigned tickets</a>
+                    </Link>
+                </div>
+            }
             { !localStorage.getItem('credentials') &&
             <Link to="/login">         
                 <button className="btn btn-dark">
@@ -18,7 +40,9 @@ function NavBar() {
             }
             { localStorage.getItem('credentials') &&
                  <div> 
-                    <label className="mr-2 text-white">{JSON.parse(localStorage.getItem('credentials')).credentials.firstName}</label>
+                    <Link to={`/user/${JSON.parse(localStorage.getItem('credentials')).credentials.id}`}>
+                        <a className="mr-2 text-white ">{JSON.parse(localStorage.getItem('credentials')).credentials.firstName}</a>
+                    </Link>
                     <Link to="/login">
                     <button className="btn btn-dark"onClick={() => {userService.logout(); }}>Sign Out</button>
                     </Link>

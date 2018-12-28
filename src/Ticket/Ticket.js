@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
 import SubmitAnswer from '../Ticket/AddAnswer'
+import AssignUser from '../Ticket/AssignUser'
 
 class Ticket extends Component {
     constructor(props) {
@@ -36,6 +37,17 @@ class Ticket extends Component {
         await this.refreshTicket();
       }
 
+      async assign(assignee) {
+        await axios.post(`http://localhost:5000/api/tickets/assign`, {
+          ticketId : this.state.ticket._id,
+          id: assignee, 
+        }, {
+          headers: { 'Authorization':  JSON.parse(localStorage.getItem('credentials')).credentials.token}
+        });
+
+        await this.refreshTicket();
+      }
+
       async resolve() {
         await axios.post(`http://localhost:5000/api/tickets/resolve`, {
           ticketId : this.state.ticket._id,
@@ -62,22 +74,29 @@ class Ticket extends Component {
                 <p className="lead">{ticket.description}</p>
                 <hr className="my-4" />
                 {!ticket.answer &&
-                <SubmitAnswer ticketId={ticket._id} submitAnswer={this.submitAnswer} />
+                  <SubmitAnswer ticketId={ticket._id} submitAnswer={this.submitAnswer} />
                 }
                 {!ticket.assignee && 
-                    <p>No one has assigned to this ticket... Yet </p>
+                    <p>No one has assigned to this ticket... Yet </p>    
+                }
+                {!ticket.assignee && localStorage.getItem('credentials') &&
+                  <AssignUser ticketId={ticket._id} assign={this.assign.bind(this)}/> 
                 }
                 {localStorage.getItem('credentials') && ticket.assignee &&
                     <Link to={`/user/${ticket.assignee._id}`}>
                     <p>Assignee: {ticket.assignee.firstName} {ticket.assignee.lastName}</p>
                     </Link>
                 }
-                <p>Answer: {ticket.answer}</p>
-                {localStorage.getItem('credentials') && ticket.assignee && ticket.assignee._id === JSON.parse(localStorage.getItem('credentials')).credentials.id && !ticket.isResolved  
-                  ||localStorage.getItem('credentials') && !ticket.isResolved && ticket.reporter._id === JSON.parse(localStorage.getItem('credentials')).credentials.id &&
+                <p>Answer: {ticket.answer} </p>
+                { localStorage.getItem('credentials') && ticket.assignee && ticket.assignee._id === JSON.parse(localStorage.getItem('credentials')).credentials.id && !ticket.isResolved  &&
                     <p className="lead">                  
                       <button type="button" class="btn btn-success" onClick={() => {this.resolve()}}>Resolve</button>
                     </p> 
+                }
+                { localStorage.getItem('credentials') && !ticket.isResolved && ticket.reporter._id === JSON.parse(localStorage.getItem('credentials')).credentials.id  &&
+                  <p className="lead">                  
+                      <button type="button" class="btn btn-success" onClick={() => {this.resolve()}}>Resolve</button>
+                  </p> 
                 }   
               </div>
             </div>   

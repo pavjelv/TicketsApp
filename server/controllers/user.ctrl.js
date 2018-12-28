@@ -18,7 +18,13 @@ module.exports = {
             if(err) {
                 return next(err);
             }
-            res.send(user);
+            let usersToSend = [];
+            for(var i = 0; i < user.length; i++){
+                if(user[i].role != 'User'){
+                    usersToSend.push(user[i]);
+                }
+            }
+            res.send(usersToSend);
             next();
         })
     },
