@@ -23,6 +23,13 @@ class Tickets extends Component {
     render() {
         return (
             <div className="container">
+                 { this.state.credentials && this.state.credentials.credentials && this.state.credentials.credentials.role == 'User' &&
+                    <div className= "float-right"> 
+                    <Link to='/newTicket'>
+                            <button type="button" className="btn btn-primary btn-lg">New ticket</button>
+                    </Link>
+                    </div>
+                }
                 <div className="row">
                     {this.state.tickets === null && <p>Loading tickets... </p>}
                     {

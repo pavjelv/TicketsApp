@@ -1,22 +1,29 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import User from '../Auth/Auth'
+import {UserServise, userService} from '../Services/UserService';
+import Tickets from '../Tickets/Tickets';
 
 function NavBar() {
     return (
         <nav className="navbar navbar-dark bg-primary fixed-top">
             <Link className="navbar-brand" to="/">
                 Ticket app
-            </Link>           
+            </Link>
+            { !localStorage.getItem('credentials') &&
+            <Link to="/login">         
                 <button className="btn btn-dark">
-                    <Link to="/login"> Sign In </Link>
+                    Sign In
                 </button>
-        
-                {/* // <div> */}
-                    {/* <label className="mr-2 text-white">{User.getProfile().firstName}</label> */}
-                    {/* <button className="btn btn-dark">Sign Out</button> */}
-                {/* // </div> */}
-            
+            </Link>
+            }
+            { localStorage.getItem('credentials') &&
+                 <div> 
+                    <label className="mr-2 text-white">{JSON.parse(localStorage.getItem('credentials')).credentials.firstName}</label>
+                    <Link to="/login">
+                    <button className="btn btn-dark"onClick={() => {userService.logout(); }}>Sign Out</button>
+                    </Link>
+                 </div>
+            }
         </nav>
     );
 }

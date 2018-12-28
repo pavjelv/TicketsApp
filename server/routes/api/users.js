@@ -74,7 +74,9 @@ router.post('/login', auth.optional, (req, res, next) => {
             if(userDetails) {
                 let credentials = {
                     firstName : userDetails[0].firstName,
-                    token : "Token " + user.token
+                    token : "Token " + user.token,
+                    role: userDetails[0].role,
+                    id : userDetails[0]._id
                 }
                 console.log(credentials)
                 //user.email = userDetails.firstName;

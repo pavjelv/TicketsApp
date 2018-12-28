@@ -1,9 +1,11 @@
 const Ticket = require ('./../models/Ticket')
 const User = require ('./../models/User')
+const UserCredentials = require('../models/Users')
 const fs = require ('fs')
 
 module.exports = {
     addTicket: (req, res, next) => {
+        const { payload: { id } } = req;
         let ticket = new Ticket (
             {
                 title: req.body.title,
@@ -14,20 +16,24 @@ module.exports = {
             }
         );
             saveTicket(ticket)
-    
+            
         function saveTicket(obj) {
-            new Ticket(obj).save((err, ticket) => {
-                if (err)
-                    res.send(err)
-                else if (!ticket)
-                res.status(400).send()
-                else {
-                    return ticket.addReporter(req.body.reporterId).then((_ticket) => {
-                        return res.send(_ticket)
-                    })
-                }
-                next()
+            UserCredentials.findById(id).then((user) => {
+                User.find({"email" : user.email}).then((userProps)=>{
+                    new Ticket(obj).save((err, ticket) => {
+                        if (err)
+                            res.send(err)
+                        else if (!ticket)
+                        res.status(400).send()
+                        else {
+                            return ticket.addReporter(userProps[0]._id).then((_ticket) => {
+                            return res.send(_ticket)
+                            })
+                        }
+                        next()
             })
+        })
+        })
         }
     },
 

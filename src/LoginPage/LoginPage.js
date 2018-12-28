@@ -79,7 +79,7 @@ class LoginPage extends React.Component {
                             }
                         </div>
                         {error &&
-                            <div className={'alert alert-danger'}>{error}</div>
+                            <div className={'alert alert-danger'}>Username or password is incorrect</div>
                         }
                     </form>
                 </div>
