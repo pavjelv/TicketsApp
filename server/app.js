@@ -11,7 +11,7 @@ const passport = require('passport')
 mongoose.promise = global.Promise;
 const app = express()
 const router = express.Router()
-const url = process.env.MONGODB_URI || "mongodb://Admin:gfdkj98985393@ds131784.mlab.com:31784/tickettracking"
+const url = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017"
 
 app.use(cors());
 app.use(morgan('combined'));

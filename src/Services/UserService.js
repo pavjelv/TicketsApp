@@ -1,22 +1,26 @@
-import axios from 'axios';
-
 
 export const userService = {
     login,
     logout,
-    getAll
+    getAll,
+    hasRole,
+    isAuthenticated,
+    getCredentials,
 };
 
+function getCredentials() {
+    return JSON.parse(localStorage.getItem('credentials'));
+}
+
+function isAuthenticated() {
+    return !!localStorage.getItem('credentials');
+}
+
+function hasRole(role) {
+    return isAuthenticated() && JSON.parse(localStorage.getItem('credentials')).credentials.role === role;
+}
+
 function login(userEmail, userPassword) {
-    // return axios.post(`http://localhost:5000/api/users/login`, {
-    //     email: userEmail,
-    //     password: userPassword
-    // }).then((user) => {
-    //     if(user) {
-    //          localStorage.setItem('credentials', JSON.stringify(user));
-    //     }
-    //     return user.data.user;
-    // });
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

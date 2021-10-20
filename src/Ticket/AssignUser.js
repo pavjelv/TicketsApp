@@ -1,6 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import axios from 'axios';
 import {withRouter} from 'react-router-dom';
+import {userService} from "../Services/UserService";
 
 
 class AssignUser extends Component {
@@ -29,19 +30,19 @@ class AssignUser extends Component {
 
   async componentDidMount() {
     const users = (await axios.get(`http://localhost:5000/api/user/getAllUsers`, {
-        headers: { 'Authorization':  JSON.parse(localStorage.getItem('credentials')).credentials.token}
+        headers: { 'Authorization':  userService.getCredentials().credentials.token}
     })).data;
 
     this.setState({
         users,
-        credentials: JSON.parse(localStorage.getItem('credentials')),
+        credentials: userService.getCredentials(),
         assignee: users[0]._id,
     });
   }
 
   render() {
-    if (!localStorage.getItem('credentials') ) return null;
-    else if (JSON.parse(localStorage.getItem('credentials')).credentials.role != 'Admin') return null;
+    if (!userService.isAuthenticated()) return null;
+    else if (userService.hasRole("Admin")) return null;
     return (
       <Fragment>
         <div className="form-group text-center">

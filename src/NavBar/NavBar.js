@@ -1,47 +1,46 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import {UserServise, userService} from '../Services/UserService';
-import Tickets from '../Tickets/Tickets';
+import {userService} from '../Services/UserService';
 
 function NavBar() {
     return (
         <nav className="navbar navbar-dark bg-primary fixed-top">
             <Link className="navbar-brand" to="/">
-                Ticket app
+                Together Cheaper
             </Link>
             
-            { localStorage.getItem('credentials') && JSON.parse(localStorage.getItem('credentials')).credentials.role == "User" &&
+            { userService.hasRole("User") &&
                  <div>
                     <Link to={`/myTickets`}>
-                        <a className="mr-2 text-white ">Reported tickets</a>
+                        <span className="mr-2 text-white ">Reported tickets</span>
                     </Link>
                 </div>
             }
-            { localStorage.getItem('credentials') && JSON.parse(localStorage.getItem('credentials')).credentials.role == "Worker" &&
+            { userService.hasRole("Worker") &&
                  <div>
                     <Link to={`/myTickets`}>
-                        <a className="mr-2 text-white ">Assigned tickets</a>
+                        <span className="mr-2 text-white ">Assigned tickets</span>
                     </Link>
                 </div>
             }
-            { localStorage.getItem('credentials') && JSON.parse(localStorage.getItem('credentials')).credentials.role == "Admin" &&
+            { userService.hasRole("Admin") &&
                  <div>
                     <Link to={`/myTickets`}>
-                        <a className="mr-2 text-white ">Unresolved and unassigned tickets</a>
+                        <span className="mr-2 text-white ">Unresolved and unassigned tickets</span>
                     </Link>
                 </div>
             }
-            { !localStorage.getItem('credentials') &&
+            { !userService.isAuthenticated() &&
             <Link to="/login">         
                 <button className="btn btn-dark">
                     Sign In
                 </button>
             </Link>
             }
-            { localStorage.getItem('credentials') &&
+            { userService.isAuthenticated() &&
                  <div> 
-                    <Link to={`/user/${JSON.parse(localStorage.getItem('credentials')).credentials.id}`}>
-                        <a className="mr-2 text-white ">{JSON.parse(localStorage.getItem('credentials')).credentials.firstName}</a>
+                    <Link to={`/user/${userService.getCredentials().credentials.id}`}>
+                        <span className="mr-2 text-white ">{userService.getCredentials().credentials.firstName}</span>
                     </Link>
                     <Link to="/login">
                     <button className="btn btn-dark"onClick={() => {userService.logout(); }}>Sign Out</button>

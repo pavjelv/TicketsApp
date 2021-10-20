@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
+import {userService} from "../Services/UserService";
 
 class Tickets extends Component {
     constructor(props) {
@@ -16,14 +17,14 @@ class Tickets extends Component {
         const tickets = (await axios.get(`http://localhost:5000/api/tickets/allTickets`)).data;
         this.setState({
             tickets,
-            credentials: JSON.parse(localStorage.getItem('credentials')),
+            credentials: userService.getCredentials(),
         });
     }
 
     render() {
         return (
             <div className="container">
-                 { this.state.credentials && this.state.credentials.credentials && this.state.credentials.credentials.role == 'User' &&
+                 { this.state.credentials && this.state.credentials.credentials && this.state.credentials.credentials.role === 'User' &&
                     <div className= "float-right"> 
                     <Link to='/newTicket'>
                             <button type="button" className="btn btn-primary btn-lg">New ticket</button>

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
+import {userService} from "../Services/UserService";
 
 class MyTickets extends Component {
     constructor(props) {
@@ -13,42 +14,42 @@ class MyTickets extends Component {
     }
 
     async componentDidMount() {
-        if (JSON.parse(localStorage.getItem('credentials')).credentials.role == "User") {
+        if (userService.hasRole("User")) {
         const tickets = (await axios.post(`http://localhost:5000/api/tickets/getMyTickets`, {
-             id : JSON.parse(localStorage.getItem('credentials')).credentials.id,
+             id : userService.getCredentials().credentials.id,
         }, {
-          headers: { 'Authorization':  JSON.parse(localStorage.getItem('credentials')).credentials.token}
+          headers: { 'Authorization':  userService.getCredentials().credentials.token}
         })).data;
 
         this.setState({
             tickets,
-            credentials: JSON.parse(localStorage.getItem('credentials')),
+            credentials: userService.getCredentials(),
         });
         }
 
-        else if (JSON.parse(localStorage.getItem('credentials')).credentials.role == "Worker"){
+        else if (userService.hasRole("Worker")){
             const tickets = (await axios.post(`http://localhost:5000/api/tickets/getAssignedTickets`, {
-                id : JSON.parse(localStorage.getItem('credentials')).credentials.id,
+                id : userService.getCredentials().credentials.id,
              }, {
-                 headers: { 'Authorization':  JSON.parse(localStorage.getItem('credentials')).credentials.token}
+                 headers: { 'Authorization':  userService.getCredentials().credentials.token}
              })).data;
 
         this.setState({
             tickets,
-            credentials: JSON.parse(localStorage.getItem('credentials')),
+            credentials: userService.getCredentials(),
         });
         }
 
         else {
             const tickets = (await axios.post(`http://localhost:5000/api/tickets/getUnassignedUnresolved`, {
-                id : JSON.parse(localStorage.getItem('credentials')).credentials.id,
+                id : userService.getCredentials().credentials.id,
             }, {
-                 headers: { 'Authorization':  JSON.parse(localStorage.getItem('credentials')).credentials.token}
+                 headers: { 'Authorization':  userService.getCredentials().credentials.token}
             })).data;
 
             this.setState({
                 tickets,
-                credentials: JSON.parse(localStorage.getItem('credentials')),
+                credentials: userService.getCredentials(),
             });
         }
     }
@@ -56,7 +57,7 @@ class MyTickets extends Component {
     render() {
         return (
             <div className="container">
-                 { this.state.credentials && this.state.credentials.credentials && this.state.credentials.credentials.role == 'User' &&
+                 { this.state.credentials && this.state.credentials.credentials && this.state.credentials.credentials.role === 'User' &&
                     <div className= "float-right"> 
                     <Link to='/newTicket'>
                             <button type="button" className="btn btn-primary btn-lg">New ticket</button>

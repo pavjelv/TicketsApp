@@ -1,5 +1,6 @@
 import React, {Component, Fragment} from 'react';
 import {withRouter} from 'react-router-dom';
+import {userService} from "../Services/UserService";
 
 
 class AddAnswer extends Component {
@@ -25,7 +26,7 @@ class AddAnswer extends Component {
   }
 
   render() {
-    if (!localStorage.getItem('credentials') || JSON.parse(localStorage.getItem('credentials')).credentials.role == 'User') return null;
+    if (!userService.isAuthenticated() || userService.hasRole("User")) return null;
     return (
       <Fragment>
         <div className="form-group text-center">
