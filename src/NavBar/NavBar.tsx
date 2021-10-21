@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {ReactElement} from 'react';
 import {Link} from 'react-router-dom';
 import {userService} from '../Services/UserService';
 
-function NavBar() {
+function NavBar(): ReactElement {
     return (
         <nav className="navbar navbar-dark bg-primary fixed-top">
             <Link className="navbar-brand" to="/">
@@ -39,11 +39,11 @@ function NavBar() {
             }
             { userService.isAuthenticated() &&
                  <div> 
-                    <Link to={`/user/${userService.getCredentials().credentials.id}`}>
-                        <span className="mr-2 text-white ">{userService.getCredentials().credentials.firstName}</span>
+                    <Link to={`/user/${userService.getCredentials().id}`}>
+                        <span className="mr-2 text-white ">{userService.getCredentials().firstName}</span>
                     </Link>
                     <Link to="/login">
-                    <button className="btn btn-dark"onClick={() => {userService.logout(); }}>Sign Out</button>
+                    <button className="btn btn-dark" onClick={() => {userService.logout(); }}>Sign Out</button>
                     </Link>
                  </div>
             }

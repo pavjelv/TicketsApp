@@ -3,15 +3,15 @@ import {withRouter} from 'react-router-dom';
 import {userService} from "../Services/UserService";
 
 
-class AddAnswer extends Component {
-  constructor(props) {
+class AddAnswer extends Component<any, {answer: string}> {
+  constructor(props: unknown) {
     super(props);
     this.state = {
       answer: '',
     };
   }
 
-  updateAnswer(value) {
+  updateAnswer(value: string) {
     this.setState({
       answer: value,
     });

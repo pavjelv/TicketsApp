@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import {userService} from "../Services/UserService";
 
-class UserPage extends Component {
-    constructor(props) {
+class UserPage extends Component<any, {user: any}> {
+    constructor(props: unknown) {
         super(props);
         this.state = {
           user: null,
@@ -14,7 +15,7 @@ class UserPage extends Component {
         const user = (await axios.post(`http://localhost:5000/api/user/getUser`, {
           id: params.id,
         }, {
-          headers: { 'Authorization':  JSON.parse(localStorage.getItem('credentials')).credentials.token}
+          headers: { 'Authorization':  userService.getCredentials().token}
         })).data;
         console.log(user)
         this.setState({

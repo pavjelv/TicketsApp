@@ -1,11 +1,13 @@
-import React, {Component} from 'react';
+import React, {Component, ReactElement} from 'react';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
 import SubmitAnswer from '../Ticket/AddAnswer'
 import AssignUser from '../Ticket/AssignUser'
+import {TicketModel} from "../model/tickets.model";
+import {userService} from "../Services/UserService";
 
-class Ticket extends Component {
-    constructor(props) {
+class Ticket extends Component<any, {ticket: TicketModel}> {
+    constructor(props: unknown) {
         super(props);
         this.state = {
           ticket: null,
@@ -26,23 +28,23 @@ class Ticket extends Component {
         });
       }
 
-      async submitAnswer(userAnswer) {
+      async submitAnswer(userAnswer: string) {
         await axios.post(`http://localhost:5000/api/tickets/answer`, {
           ticketId : this.state.ticket._id,
           answer: userAnswer, 
         }, {
-          headers: { 'Authorization':  JSON.parse(localStorage.getItem('credentials')).credentials.token}
+          headers: { 'Authorization':  userService.getCredentials().token}
         });
 
         await this.refreshTicket();
       }
 
-      async assign(assignee) {
+      async assign(assignee: string) {
         await axios.post(`http://localhost:5000/api/tickets/assign`, {
           ticketId : this.state.ticket._id,
           id: assignee, 
         }, {
-          headers: { 'Authorization':  JSON.parse(localStorage.getItem('credentials')).credentials.token}
+          headers: { 'Authorization':  userService.getCredentials().token}
         });
 
         await this.refreshTicket();
@@ -52,13 +54,13 @@ class Ticket extends Component {
         await axios.post(`http://localhost:5000/api/tickets/resolve`, {
           ticketId : this.state.ticket._id,
         }, {
-          headers: { 'Authorization':  JSON.parse(localStorage.getItem('credentials')).credentials.token}
+          headers: { 'Authorization':  userService.getCredentials().token}
         });
 
         await this.refreshTicket();
       }
 
-      render() {
+      render(): ReactElement {
           const {ticket} = this.state;
           if(ticket === null) return <p>Loading ...</p>;
           return (
@@ -66,7 +68,7 @@ class Ticket extends Component {
             <div className="row">
               <div className="jumbotron col-12">
                 <h1 className="display-3">{ticket.title}</h1>
-                { localStorage.getItem('credentials') &&
+                { userService.isAuthenticated() &&
                 <Link to={`/user/${ticket.reporter._id}`}>
                 <p className="lead">Reporter: {ticket.reporter.firstName} {ticket.reporter.lastName}</p>
                 </Link>
@@ -79,23 +81,23 @@ class Ticket extends Component {
                 {!ticket.assignee && 
                     <p>No one has assigned to this ticket... Yet </p>    
                 }
-                {!ticket.assignee && localStorage.getItem('credentials') &&
+                {userService.isAuthenticated() && !ticket.assignee &&
                   <AssignUser ticketId={ticket._id} assign={this.assign.bind(this)}/> 
                 }
-                {localStorage.getItem('credentials') && ticket.assignee &&
+                {userService.isAuthenticated() && ticket.assignee &&
                     <Link to={`/user/${ticket.assignee._id}`}>
                     <p>Assignee: {ticket.assignee.firstName} {ticket.assignee.lastName}</p>
                     </Link>
                 }
                 <p>Answer: {ticket.answer} </p>
-                { localStorage.getItem('credentials') && ticket.assignee && ticket.assignee._id === JSON.parse(localStorage.getItem('credentials')).credentials.id && !ticket.isResolved  &&
+                { userService.isAuthenticated() && ticket.assignee && ticket.assignee._id === userService.getCredentials().id && !ticket.isResolved  &&
                     <p className="lead">                  
-                      <button type="button" class="btn btn-success" onClick={() => {this.resolve()}}>Resolve</button>
+                      <button type="button" className="btn btn-success" onClick={() => {this.resolve()}}>Resolve</button>
                     </p> 
                 }
-                { localStorage.getItem('credentials') && !ticket.isResolved && ticket.reporter._id === JSON.parse(localStorage.getItem('credentials')).credentials.id  &&
+                { userService.isAuthenticated() && !ticket.isResolved && ticket.reporter._id === userService.getCredentials().id  &&
                   <p className="lead">                  
-                      <button type="button" class="btn btn-success" onClick={() => {this.resolve()}}>Resolve</button>
+                      <button type="button" className="btn btn-success" onClick={() => {this.resolve()}}>Resolve</button>
                   </p> 
                 }   
               </div>
