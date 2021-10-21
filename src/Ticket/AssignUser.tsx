@@ -2,10 +2,16 @@ import React, {Component, Fragment} from 'react';
 import axios from 'axios';
 import {withRouter} from 'react-router-dom';
 import {userService} from "../Services/UserService";
+import {CredentialsModel} from "../model/credentials.model";
 
+interface AssignUserState {
+    assignee: string;
+    users: any[];
+    credentials: CredentialsModel;
+}
 
-class AssignUser extends Component {
-  constructor(props) {
+class AssignUser extends Component<any, AssignUserState> {
+  constructor(props: unknown) {
     super(props);
     this.state = {
       assignee: '',
@@ -14,7 +20,7 @@ class AssignUser extends Component {
     };
   }
 
-  assign(value) {
+  assign(value: string) {
     this.setState({
       assignee: value,
     });
@@ -30,7 +36,7 @@ class AssignUser extends Component {
 
   async componentDidMount() {
     const users = (await axios.get(`http://localhost:5000/api/user/getAllUsers`, {
-        headers: { 'Authorization':  userService.getCredentials().credentials.token}
+        headers: { 'Authorization':  userService.getCredentials().token}
     })).data;
 
     this.setState({
@@ -46,8 +52,8 @@ class AssignUser extends Component {
     return (
       <Fragment>
         <div className="form-group text-center">
-          <label for="exampleSelect1">Assignee:</label>
-          <select class="form-control" id="exampleSelect1"
+          <label>Assignee:</label>
+          <select className="form-control" id="exampleSelect1"
             onChange={(e) => {this.assign(e.target.value)}}>
           {this.state.users === null && <p>Loading users... </p>}
             {

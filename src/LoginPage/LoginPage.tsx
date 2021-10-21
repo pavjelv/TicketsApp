@@ -1,7 +1,9 @@
-import React from 'react';
-import {userService} from '../Services/UserService'
-class LoginPage extends React.Component {
-        constructor(props) {
+import React, {ChangeEvent, ReactElement} from 'react';
+import {userService} from '../Services/UserService';
+import {LoginPageState} from "../model/login-page.model";
+
+class LoginPage extends React.Component<unknown, LoginPageState> {
+        constructor(props: unknown) {
             super(props);
     
             userService.logout();
@@ -18,12 +20,20 @@ class LoginPage extends React.Component {
             this.handleSubmit = this.handleSubmit.bind(this);
         }
     
-        handleChange(e) {
-            const { name, value } = e.target;
-            this.setState({ [name]: value });
+        handleChange(e: ChangeEvent<HTMLInputElement>) : void {
+            switch (e.target.name) {
+                case "email":
+                    this.setState({email: e.target.value});
+                    break;
+                case "password":
+                    this.setState({email: e.target.value});
+                    break;
+                default:
+                    break;
+            }
         }
     
-        handleSubmit(e) {
+        handleSubmit(e: ChangeEvent<HTMLFormElement>): void {
             e.preventDefault();
     
             this.setState({ submitted: true });
@@ -36,22 +46,12 @@ class LoginPage extends React.Component {
     
             this.setState({ loading: true });
             userService.login(email, password)
-                .then(
-                    user => {
-                        // if (user.message) {
-                        //     this.setState({ error : user.message, loading: false })
-                        // }
-                        // else {
-                        
-                        const { from } = this.props.location.state || { from: { pathname: "/" } };
-                        this.props.history.push(from);
-                        
-                    },
-                    error => this.setState({ error, loading: false })
-                );
+                // .then(
+                //     error => this.setState({ error, loading: false })
+                // );
         }
     
-        render() {
+        render(): ReactElement {
             const { email, password, submitted, loading, error } = this.state;
             return (
                 <div className="col-md-6 col-md-offset-3">

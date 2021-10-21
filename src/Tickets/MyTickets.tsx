@@ -2,29 +2,63 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import {userService} from "../Services/UserService";
+import {TicketsState} from "../model/tickets.model";
 
-class Tickets extends Component {
-    constructor(props) {
+class MyTickets extends Component<unknown, TicketsState> {
+    constructor(props: unknown) {
         super(props);
 
         this.state = {
             tickets: null,
-            credentials: {},
+            credentials: null,
         };
     }
 
     async componentDidMount() {
-        const tickets = (await axios.get(`http://localhost:5000/api/tickets/allTickets`)).data;
+        if (userService.hasRole("User")) {
+        const tickets = (await axios.post(`http://localhost:5000/api/tickets/getMyTickets`, {
+             id : userService.getCredentials().id,
+        }, {
+          headers: { 'Authorization':  userService.getCredentials().token}
+        })).data;
+
         this.setState({
             tickets,
             credentials: userService.getCredentials(),
         });
+        }
+
+        else if (userService.hasRole("Worker")){
+            const tickets = (await axios.post(`http://localhost:5000/api/tickets/getAssignedTickets`, {
+                id : userService.getCredentials().id,
+             }, {
+                 headers: { 'Authorization':  userService.getCredentials().token}
+             })).data;
+
+        this.setState({
+            tickets,
+            credentials: userService.getCredentials(),
+        });
+        }
+
+        else {
+            const tickets = (await axios.post(`http://localhost:5000/api/tickets/getUnassignedUnresolved`, {
+                id : userService.getCredentials().id,
+            }, {
+                 headers: { 'Authorization':  userService.getCredentials().token}
+            })).data;
+
+            this.setState({
+                tickets,
+                credentials: userService.getCredentials(),
+            });
+        }
     }
 
     render() {
         return (
             <div className="container">
-                 { this.state.credentials && this.state.credentials.credentials && this.state.credentials.credentials.role === 'User' &&
+                 { this.state.credentials && this.state.credentials && this.state.credentials.role === 'User' &&
                     <div className= "float-right"> 
                     <Link to='/newTicket'>
                             <button type="button" className="btn btn-primary btn-lg">New ticket</button>
@@ -54,4 +88,4 @@ class Tickets extends Component {
     }
 }
 
-export default Tickets;
+export default MyTickets;

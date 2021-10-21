@@ -1,9 +1,16 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import axios from 'axios';
+import {userService} from "../Services/UserService";
 
-class NewTicket extends Component {
-    constructor(props) {
+interface NewTicketState {
+    disabled: boolean;
+    title: string;
+    description: string;
+}
+
+class NewTicket extends Component<any, NewTicketState> {
+    constructor(props: unknown) {
         super(props);
 
         this.state = {
@@ -12,13 +19,13 @@ class NewTicket extends Component {
             description: '',
         };
     }
-    updateDescription(value) {
+    updateDescription(value: string) {
         this.setState({
           description: value,
         });
       }
     
-      updateTitle(value) {
+      updateTitle(value: string) {
         this.setState({
           title: value,
         });
@@ -33,7 +40,7 @@ class NewTicket extends Component {
             title: this.state.title,
             description: this.state.description,
           }, {
-            headers: { 'Authorization':  JSON.parse(localStorage.getItem('credentials')).credentials.token}
+            headers: { 'Authorization':  userService.getCredentials().token}
         });
 
         this.props.history.push('/');

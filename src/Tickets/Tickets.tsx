@@ -2,62 +2,30 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import {userService} from "../Services/UserService";
+import {TicketsState} from "../model/tickets.model";
 
-class MyTickets extends Component {
-    constructor(props) {
+class Tickets extends Component<unknown, TicketsState> {
+    constructor(props: unknown) {
         super(props);
 
         this.state = {
             tickets: null,
-            credentials: {},
+            credentials: null,
         };
     }
 
     async componentDidMount() {
-        if (userService.hasRole("User")) {
-        const tickets = (await axios.post(`http://localhost:5000/api/tickets/getMyTickets`, {
-             id : userService.getCredentials().credentials.id,
-        }, {
-          headers: { 'Authorization':  userService.getCredentials().credentials.token}
-        })).data;
-
+        const tickets = (await axios.get(`http://localhost:5000/api/tickets/allTickets`)).data;
         this.setState({
             tickets,
             credentials: userService.getCredentials(),
         });
-        }
-
-        else if (userService.hasRole("Worker")){
-            const tickets = (await axios.post(`http://localhost:5000/api/tickets/getAssignedTickets`, {
-                id : userService.getCredentials().credentials.id,
-             }, {
-                 headers: { 'Authorization':  userService.getCredentials().credentials.token}
-             })).data;
-
-        this.setState({
-            tickets,
-            credentials: userService.getCredentials(),
-        });
-        }
-
-        else {
-            const tickets = (await axios.post(`http://localhost:5000/api/tickets/getUnassignedUnresolved`, {
-                id : userService.getCredentials().credentials.id,
-            }, {
-                 headers: { 'Authorization':  userService.getCredentials().credentials.token}
-            })).data;
-
-            this.setState({
-                tickets,
-                credentials: userService.getCredentials(),
-            });
-        }
     }
 
     render() {
         return (
             <div className="container">
-                 { this.state.credentials && this.state.credentials.credentials && this.state.credentials.credentials.role === 'User' &&
+                 { this.state.credentials && this.state.credentials && this.state.credentials.role === 'User' &&
                     <div className= "float-right"> 
                     <Link to='/newTicket'>
                             <button type="button" className="btn btn-primary btn-lg">New ticket</button>
@@ -87,4 +55,4 @@ class MyTickets extends Component {
     }
 }
 
-export default MyTickets;
+export default Tickets;

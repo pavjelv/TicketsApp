@@ -1,3 +1,4 @@
+import {CredentialsModel} from "../model/credentials.model";
 
 export const userService = {
     login,
@@ -8,19 +9,19 @@ export const userService = {
     getCredentials,
 };
 
-function getCredentials() {
-    return JSON.parse(localStorage.getItem('credentials'));
+function getCredentials(): CredentialsModel {
+    return JSON.parse(localStorage.getItem('credentials')).credentials;
 }
 
 function isAuthenticated() {
     return !!localStorage.getItem('credentials');
 }
 
-function hasRole(role) {
-    return isAuthenticated() && JSON.parse(localStorage.getItem('credentials')).credentials.role === role;
+function hasRole(role: string) {
+    return isAuthenticated() && getCredentials().role === role;
 }
 
-function login(userEmail, userPassword) {
+function login(userEmail: string, userPassword: string): Promise<CredentialsModel> {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -38,7 +39,6 @@ function login(userEmail, userPassword) {
                 // store user details and basic auth credentials in local storage 
                 // to keep user logged in between page refreshes
                 localStorage.setItem('credentials', JSON.stringify(credentials));
-                
             }
             return credentials;
         });
@@ -54,8 +54,8 @@ function getAll() {
     //return fetch(`/users`, requestOptions).then(handleResponse);
 }
 
-function handleResponse(response) {
-    return response.text().then(text => {
+function handleResponse(response: Response): Promise<CredentialsModel> {
+    return response.text().then((text: string) => {
         const data = text && JSON.parse(text);
         if (!response.ok) {
             if (response.status === 401) {
