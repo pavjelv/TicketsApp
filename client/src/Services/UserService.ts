@@ -1,4 +1,4 @@
-import {CredentialsModel} from "../model/credentials.model";
+import {CredentialsModel} from "@pavo/shared-services-shared/src";
 
 export const userService = {
     login,

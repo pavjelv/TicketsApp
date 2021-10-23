@@ -2,7 +2,7 @@ import React, {Component, Fragment} from 'react';
 import axios from 'axios';
 import {withRouter} from 'react-router-dom';
 import {userService} from "../Services/UserService";
-import {CredentialsModel} from "../model/credentials.model";
+import {CredentialsModel} from "@pavo/shared-services-shared/src";
 
 interface AssignUserState {
     assignee: string;

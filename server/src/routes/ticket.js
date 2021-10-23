@@ -1,4 +1,4 @@
-const ticketController = require ('./../controllers/ticket.ctrl')
+const ticketController = require ('../controllers/ticket.ctrl')
 const multipart = require ('connect-multiparty')
 const multipartWare = multipart()
 

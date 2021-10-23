@@ -1,5 +1,5 @@
-const Ticket = require ('./../models/Ticket')
-const User = require ('./../models/User')
+const Ticket = require ('../models/Ticket')
+const User = require ('../models/User')
 const fs = require ('fs')
 
 module.exports = {

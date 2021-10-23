@@ -1,9 +1,9 @@
 import React, {Component, ReactElement} from 'react';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
-import SubmitAnswer from '../Ticket/AddAnswer'
-import AssignUser from '../Ticket/AssignUser'
-import {TicketModel} from "../model/tickets.model";
+import SubmitAnswer from './AddAnswer'
+import AssignUser from './AssignUser'
+import {TicketModel} from "@pavo/shared-services-shared/src";
 import {userService} from "../Services/UserService";
 
 class Ticket extends Component<any, {ticket: TicketModel}> {
