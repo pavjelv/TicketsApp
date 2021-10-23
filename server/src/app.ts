@@ -1,16 +1,16 @@
-const express = require("express")
-const routes = require('./routes')
-const morgan = require('morgan');
-const mongoose = require('mongoose')
-const cors = require('cors')
-const bodyParser = require('body-parser')
-const path = require('path');
-const helmet = require('helmet')
-const session = require('express-session')
-const passport = require('passport')
-mongoose.promise = global.Promise;
+import express from "express";
+import morgan from "morgan";
+import mongoose from "mongoose";
+import bodyParser from "body-parser";
+import path from "path";
+import cors from "cors";
+// @ts-ignore
+import helmet from "helmet";
+import session from "express-session";
+import passport from "passport";
+
+mongoose.Promise = global.Promise;
 const app = express()
-const router = express.Router()
 const url = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017"
 
 app.use(cors());
@@ -33,8 +33,9 @@ try {
 }
 
 /** authentication */
-require('./models/Users')
-require('./config/passport');
+// require('./models/Users')
+// require('./config/passport');
+// app.use(require('./routes'));
 app.use(require('./routes'));
 
 let port = 5000 || process.env.PORT

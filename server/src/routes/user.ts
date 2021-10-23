@@ -1,9 +1,7 @@
-const userController = require ('../controllers/user.ctrl')
-const multipart = require('connect-multiparty')
-const multipartWare = multipart()
+import * as userController from "../controllers/user.ctrl";
+import {Router} from "express";
 
-module.exports = (router) => {
-    
+export default (router: Router) => {
     router
         .route ('/getUser')
         .post(userController.getUser)
@@ -12,7 +10,7 @@ module.exports = (router) => {
         .route ('/getAllUsers')
         .get(userController.getAll)
 
-    router 
+    router
         .route ('/createUser')
         .post(userController.createUser)
 }

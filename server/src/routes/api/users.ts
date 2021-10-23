@@ -1,23 +1,20 @@
-const mongoose = require('mongoose');
-const passport = require('passport');
-const router = require('express').Router();
-const auth = require('../auth');
-const ticketController = require ('../../controllers/ticket.ctrl')
-const userController = require ('../../controllers/user.ctrl')
-const multipart = require ('connect-multiparty')
-const multipartWare = multipart()
+import passport from "passport";
+import express, {NextFunction, Request, Response} from "express";
+import {auth} from "../auth";
+import {SecureUser} from "../../models/SecureUser";
+import {DetailedUser} from "../../models/DetailedUser";
+import {DetailedUserModel, SecureUserModel} from "@pavo/shared-services-shared/src";
 
-const Users = require('../../models/Users')
-const User = require('../../models/User')
+const router = express.Router();
 
 
 //POST new user route (optional, everyone has access)
-router.post('/', auth.optional, (req, res, next) => {
+router.post('/', auth.optional, (req: Request, res: Response) => {
     let user = ({
         email: req.body.email,
         password: req.body.password
     })
-  if(!user.email) {
+  if (!user.email) {
     return res.status(422).json({
       errors: {
         email: 'is required',
@@ -25,7 +22,7 @@ router.post('/', auth.optional, (req, res, next) => {
     });
   }
 
-  if(!user.password) {
+  if (!user.password) {
     return res.status(422).json({
       errors: {
         password: 'is required',
@@ -33,7 +30,7 @@ router.post('/', auth.optional, (req, res, next) => {
     });
   }
 
-  const finalUser = new Users(user);
+  const finalUser = new SecureUser(user);
 
   finalUser.setPassword(user.password);
 
@@ -42,7 +39,7 @@ router.post('/', auth.optional, (req, res, next) => {
 });
 
 //POST login route (optional, everyone has access)
-router.post('/login', auth.optional, (req, res, next) => {
+router.post('/login', auth.optional, (req: Request, res: Response, next: NextFunction): any => {
     let user = ({
         email: req.body.email,
         password: req.body.password
@@ -70,7 +67,7 @@ router.post('/login', auth.optional, (req, res, next) => {
     if(passportUser) {
       const user = passportUser;
       user.token = passportUser.generateJWT();
-      User.find({"email": user.email}).then((userDetails => {
+      DetailedUser.find({"email": user.email}).then(((userDetails: DetailedUserModel[]) => {
             if(userDetails) {
                 let credentials = {
                     firstName : userDetails[0].firstName,
@@ -90,16 +87,17 @@ router.post('/login', auth.optional, (req, res, next) => {
 });
 
 //GET current route (required, only authenticated users have access)
-router.get('/current', auth.required, (req, res, next) => {
-  const { payload: { id } } = req;
-  return Users.findById(id)
-    .then((user) => {
-      if(!user) {
+router.get('/current', auth.required, (req: Request, res: Response) => {
+  // @ts-ignore
+    const { payload: { id } } = req;
+  return SecureUser.findById(id)
+    .then((user: SecureUserModel) => {
+      if (!user) {
         return res.sendStatus(400);
       }
       console.log("user");
-      User.find({"email" : user.email})
-      .then((usr)=> {
+      return SecureUser.find({"email" : user.email})
+      .then((usr: SecureUserModel)=> {
           res.send(usr)
       })
       //return res.json({ user: user.toAuthJSON() });

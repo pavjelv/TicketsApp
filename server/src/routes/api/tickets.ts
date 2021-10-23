@@ -1,5 +1,7 @@
-const passport = require('passport');
-const router = require('express').Router();
+import express from "express";
+
+const router = express.Router();
+
 const auth = require('../auth');
 const ticketController = require ('../../controllers/ticket.ctrl')
 const multipart = require ('connect-multiparty')
@@ -23,7 +25,7 @@ router.post('/answer', auth.required, ticketController.addAnswer)
 
 router.get('/getAllUnresolved', auth.required, ticketController.getAllUnresolved)
 
-router.post('/getUnassignedUnresolved', auth.required, ticketController.getUnassinedUnresolvedTickets)
+router.post('/getUnassignedUnresolved', auth.required, ticketController.getUnassignedUnresolvedTickets)
 
 router.post('/getReportedUnresolved', auth.required, ticketController.getMyUnresolvedTickets)
 

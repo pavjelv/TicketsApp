@@ -1,26 +1,27 @@
-const mongoose = require('mongoose');
-const crypto = require('crypto');
-const jwt = require('jsonwebtoken');
+import mongoose from 'mongoose';
+import crypto from "crypto";
+import * as jwt from "jsonwebtoken";
+import {SecureUserDao} from "./dao/secure-user.dao";
 
-const Schema = mongoose.Schema;
-
-let UsersSchema = new mongoose.Schema({
+const UsersSchema = new mongoose.Schema<SecureUserDao>({
   email: String,
   hash: String,
   salt: String,
 });
 
-UsersSchema.methods.setPassword = function(password) {
+export const SecureUser = mongoose.model('SecureUser', UsersSchema);
+
+UsersSchema.methods.setPassword = function(password: string): void {
   this.salt = crypto.randomBytes(16).toString('hex');
   this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
 };
 
-UsersSchema.methods.validatePassword = function(password) {
+UsersSchema.methods.validatePassword = function(password: string): boolean {
   const hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
   return this.hash === hash;
 };
 
-UsersSchema.methods.generateJWT = function() {
+UsersSchema.methods.generateJWT = function(): string {
   const today = new Date();
   const expirationDate = new Date(today);
   expirationDate.setDate(today.getDate() + 60);
@@ -28,7 +29,7 @@ UsersSchema.methods.generateJWT = function() {
   return jwt.sign({
     email: this.email,
     id: this._id,
-    exp: parseInt(expirationDate.getTime() / 1000, 10),
+    exp: parseInt(String(expirationDate.getTime() / 1000), 10),
   }, 'secret');
 }
 
@@ -40,4 +41,3 @@ UsersSchema.methods.toAuthJSON = function() {
   };
 }
 
-module.exports= mongoose.model('Users', UsersSchema);

@@ -1,8 +1,7 @@
-const ticketController = require ('../controllers/ticket.ctrl')
-const multipart = require ('connect-multiparty')
-const multipartWare = multipart()
+import * as ticketController from "../controllers/ticket.ctrl";
+import {Router} from "express";
 
-module.exports = (router) => {
+export default (router: Router) => {
     router 
         .route('/allTickets')
         .get(ticketController.getAll)
@@ -13,7 +12,7 @@ module.exports = (router) => {
     
     router 
         .route('/addTicket')
-        .post(multipartWare, ticketController.addTicket)
+        .post(ticketController.addTicket)
 
     router
         .route('/getMyTickets')
@@ -40,8 +39,8 @@ module.exports = (router) => {
         .get(ticketController.getAllUnresolved)
 
     router 
-        .route('/getAssignedUnresolved')
-        .post(ticketController.getAssinedUnresolvedTickets)
+        .route('/getUnassignedUnresolved')
+        .post(ticketController.getUnassignedUnresolvedTickets)
 
     router
         .route('/getReportedUnresolved')
