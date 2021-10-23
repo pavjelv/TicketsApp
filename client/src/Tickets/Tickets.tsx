@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import {userService} from "../Services/UserService";
-import {TicketsState} from "../model/tickets.model";
+import {TicketsState} from "@pavo/shared-services-shared/src";
 
 class Tickets extends Component<unknown, TicketsState> {
     constructor(props: unknown) {

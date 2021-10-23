@@ -1,6 +1,6 @@
 import React, {ChangeEvent, ReactElement} from 'react';
 import {userService} from '../Services/UserService';
-import {LoginPageState} from "../model/login-page.model";
+import {LoginPageState} from "@pavo/shared-services-shared/src";
 
 class LoginPage extends React.Component<unknown, LoginPageState> {
         constructor(props: unknown) {

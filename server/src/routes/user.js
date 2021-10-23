@@ -1,4 +1,4 @@
-const userController = require ('./../controllers/user.ctrl')
+const userController = require ('../controllers/user.ctrl')
 const multipart = require('connect-multiparty')
 const multipartWare = multipart()
 
