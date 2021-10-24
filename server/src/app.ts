@@ -8,6 +8,7 @@ import cors from "cors";
 import helmet from "helmet";
 import session from "express-session";
 import passport from "passport";
+import {addLocalStrategy} from "./config/passport";
 
 mongoose.Promise = global.Promise;
 const app = express()
@@ -21,11 +22,14 @@ app.use(helmet());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({secret: 'my-secret-word', cookie: {maxAge: 60000}, resave:false, saveUninitialized: false}));
 app.use(passport.initialize());
+addLocalStrategy();
 
 
 /** connect to MongoDB datastore */
 try {
     mongoose.connect(url, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
         //useMongoClient: true
     })    
 } catch (error) {

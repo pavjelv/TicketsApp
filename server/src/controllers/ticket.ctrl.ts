@@ -149,7 +149,7 @@ export function getMyTickets (req: Request, res: Response, next: NextFunction) {
         });
 }
 
-export const getUnassignedUnresolvedTickets = (_req: Request, res: Response, next: NextFunction) => {
+export function getUnassignedUnresolvedTickets (_req: Request, res: Response, next: NextFunction) {
     Ticket.find({"isResolved": false})
         .populate('reporter')
         .populate('assignee')
@@ -163,7 +163,7 @@ export const getUnassignedUnresolvedTickets = (_req: Request, res: Response, nex
         }
         next();
     })
-};
+}
 
 export function getAssignedTickets (req: Request, res: Response, next: NextFunction) {
     Ticket.find({})

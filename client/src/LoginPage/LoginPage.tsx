@@ -26,7 +26,7 @@ class LoginPage extends React.Component<unknown, LoginPageState> {
                     this.setState({email: e.target.value});
                     break;
                 case "password":
-                    this.setState({email: e.target.value});
+                    this.setState({password: e.target.value});
                     break;
                 default:
                     break;

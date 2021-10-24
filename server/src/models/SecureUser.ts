@@ -9,8 +9,6 @@ const UsersSchema = new mongoose.Schema<SecureUserDao>({
   salt: String,
 });
 
-export const SecureUser = mongoose.model('SecureUser', UsersSchema);
-
 UsersSchema.methods.setPassword = function(password: string): void {
   this.salt = crypto.randomBytes(16).toString('hex');
   this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
@@ -40,4 +38,6 @@ UsersSchema.methods.toAuthJSON = function() {
     token: this.generateJWT(),
   };
 }
+
+export const SecureUser = mongoose.model('SecureUser', UsersSchema);
 

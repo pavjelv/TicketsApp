@@ -29,8 +29,6 @@ const TicketSchema = new Schema<TicketDAO>({
     }
 });
 
-export const Ticket = mongoose.model('Ticket', TicketSchema);
-
 TicketSchema.methods.addTicket = function(): Promise<unknown> {
     return this.save();
 }
@@ -55,12 +53,14 @@ TicketSchema.methods.resolve = function(): Promise<unknown> {
     return this.save();
 }
 
-TicketSchema.methods.getAllTickets = function(): TicketModel[] {
-    return Ticket.find({'isResolved' : false}).then((ticket: TicketModel) => {
+TicketSchema.statics.getAllTickets = function(): TicketModel[] {
+    return this.find({'isResolved' : false}).then((ticket: TicketModel) => {
         return ticket
     });
 }
 
 TicketSchema.methods.getId = function(assigneeId) {
     return this.assignee._id == assigneeId
-} 
+}
+
+export const Ticket = mongoose.model('Ticket', TicketSchema);

@@ -13,10 +13,10 @@ const UserSchema = new mongoose.Schema<DetailedUserModel> (
     }
 )
 
-export const DetailedUser = mongoose.model('DetailedUser', UserSchema);
-
-UserSchema.methods.getUser = function (firstName) {
-    DetailedUser.find ({"firstName" : firstName}).then((user: DetailedUserModel) => {
+UserSchema.statics.getUser = function (firstName) {
+    this.find ({"firstName" : firstName}).then((user: DetailedUserModel) => {
         return user
     });
 }
+
+export const DetailedUser = mongoose.model('DetailedUser', UserSchema);

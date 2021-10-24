@@ -4,6 +4,7 @@ import {auth} from "../auth";
 import {SecureUser} from "../../models/SecureUser";
 import {DetailedUser} from "../../models/DetailedUser";
 import {DetailedUserModel, SecureUserModel} from "@pavo/shared-services-shared/src";
+import {SecureUserDao} from "../../models/dao/secure-user.dao";
 
 const router = express.Router();
 
@@ -60,18 +61,18 @@ router.post('/login', auth.optional, (req: Request, res: Response, next: NextFun
       },
     });
   }
-  passport.authenticate('local', { session: false }, (err, passportUser, info) => {
+  passport.authenticate('local', { session: false }, (err: unknown, passportUser: SecureUserDao, info) => {
     if(err) {
       return next(err);
     }
-    if(passportUser) {
-      const user = passportUser;
+    if (passportUser) {
+      const user: SecureUserDao = passportUser;
       user.token = passportUser.generateJWT();
       DetailedUser.find({"email": user.email}).then(((userDetails: DetailedUserModel[]) => {
             if(userDetails) {
                 let credentials = {
                     firstName : userDetails[0].firstName,
-                    token : "Token " + user.token,
+                    token : "Token=" + user.token,
                     role: userDetails[0].role,
                     id : userDetails[0]._id
                 }

@@ -2,10 +2,8 @@ import express from "express";
 
 const router = express.Router();
 
-const auth = require('../auth');
-const ticketController = require ('../../controllers/ticket.ctrl')
-const multipart = require ('connect-multiparty')
-const multipartWare = multipart()
+import {auth} from "../auth";
+import * as ticketController from "../../controllers/ticket.ctrl";
 
 router.get('/allTickets', auth.optional, ticketController.getAll)
 
