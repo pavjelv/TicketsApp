@@ -1,4 +1,5 @@
-import {CredentialsModel} from "@pavo/shared-services-shared/src";
+import {CredentialsModel, RegistrationPageModel} from "@pavo/shared-services-shared/src";
+import {api_url} from "../environment";
 
 export const userService = {
     login,
@@ -7,6 +8,7 @@ export const userService = {
     hasRole,
     isAuthenticated,
     getCredentials,
+    register,
 };
 
 function getCredentials(): CredentialsModel {
@@ -21,17 +23,37 @@ function hasRole(role: string) {
     return isAuthenticated() && getCredentials().role === role;
 }
 
+function register(model: RegistrationPageModel): Promise<CredentialsModel> {
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(model)
+    };
+
+    return fetch(`${api_url}/user/createUser`, requestOptions)
+        .then(handleResponse)
+        .then(credentials => {
+            // login successful if there's a user in the response
+            if (credentials) {
+                // store user details and basic auth credentials in local storage
+                // to keep user logged in between page refreshes
+                localStorage.setItem('credentials', JSON.stringify(credentials));
+            }
+            return credentials;
+        });
+}
+
 function login(userEmail: string, userPassword: string): Promise<CredentialsModel> {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-            email : userEmail, 
+            email : userEmail,
             password : userPassword
         })
     };
 
-    return fetch(`http://localhost:5000/api/users/login`, requestOptions)
+    return fetch(`${api_url}/login`, requestOptions)
         .then(handleResponse)
         .then(credentials => { 
             // login successful if there's a user in the response

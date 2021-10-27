@@ -31,11 +31,18 @@ function NavBar(): ReactElement {
                 </div>
             }
             { !userService.isAuthenticated() &&
-            <Link to="/login">         
-                <button className="btn btn-dark">
-                    Sign In
-                </button>
-            </Link>
+                <Link to="/login">
+                    <button className="btn btn-dark">
+                        Sign In
+                    </button>
+                </Link>
+            }
+            { !userService.isAuthenticated() &&
+                <Link to="/register">
+                    <button className="btn btn-dark">
+                        Sign Up
+                    </button>
+                </Link>
             }
             { userService.isAuthenticated() &&
                  <div> 

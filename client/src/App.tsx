@@ -8,6 +8,7 @@ import { PrivateRoute } from './Auth/PrivateRoute';
 import NewTicket from './Ticket/NewTicket'
 import UserPage from './UserPage/UserPage'
 import MyTickets from './Tickets/MyTickets'
+import {RegistrationForm} from "./Registration/RegistrationForm";
 
 class App extends Component {
   render() {
@@ -21,6 +22,7 @@ class App extends Component {
         <Route path="/login" component={LoginPage} />
         <PrivateRoute path='/newTicket' component={NewTicket} />
         <PrivateRoute path='/user/:id' component={UserPage}/>
+        <Route path="/register" component={RegistrationForm} />
         {/* <Route exact path='/user' component={User}/> */}
 
       </div>
