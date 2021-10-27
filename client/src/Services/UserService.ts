@@ -12,6 +12,7 @@ export const userService = {
 };
 
 function getCredentials(): CredentialsModel {
+    // return {firstName: "", id: "", role: "", token: ""};
     return JSON.parse(localStorage.getItem('credentials')).credentials;
 }
 

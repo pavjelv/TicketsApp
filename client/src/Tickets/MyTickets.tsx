@@ -2,14 +2,14 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import {userService} from "../Services/UserService";
-import {TicketsState} from "@pavo/shared-services-shared/src";
+import {OrdersState} from "@pavo/shared-services-shared/src";
 
-class MyTickets extends Component<unknown, TicketsState> {
+class MyTickets extends Component<unknown, OrdersState> {
     constructor(props: unknown) {
         super(props);
 
         this.state = {
-            tickets: null,
+            orders: null,
             credentials: null,
         };
     }
@@ -23,7 +23,7 @@ class MyTickets extends Component<unknown, TicketsState> {
         })).data;
 
         this.setState({
-            tickets,
+            orders: tickets,
             credentials: userService.getCredentials(),
         });
         }
@@ -36,7 +36,7 @@ class MyTickets extends Component<unknown, TicketsState> {
              })).data;
 
         this.setState({
-            tickets,
+            orders: tickets,
             credentials: userService.getCredentials(),
         });
         }
@@ -49,7 +49,7 @@ class MyTickets extends Component<unknown, TicketsState> {
             })).data;
 
             this.setState({
-                tickets,
+                orders: tickets,
                 credentials: userService.getCredentials(),
             });
         }
@@ -66,9 +66,9 @@ class MyTickets extends Component<unknown, TicketsState> {
                     </div>
                 }
                 <div className="row">
-                    {this.state.tickets === null && <p>Loading tickets... </p>}
+                    {this.state.orders === null && <p>Loading tickets... </p>}
                     {
-                        this.state.tickets && this.state.tickets.map(ticket => (
+                        this.state.orders && this.state.orders.map(ticket => (
                             <div key={ticket._id} className="col-sm-12 col-md-4 col-lg-3">
                             <Link to={`/ticket/${ticket._id}`}>
                              <div className={"card text-white" + (!ticket.isResolved ? ' bg-danger mb-3' : ' bg-success mb-3')}>

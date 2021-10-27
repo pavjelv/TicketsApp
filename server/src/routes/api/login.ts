@@ -8,39 +8,8 @@ import {SecureUserDao} from "../../models/dao/secure-user.dao";
 
 const router = express.Router();
 
-
-//POST new user route (optional, everyone has access)
-router.post('/', auth.optional, (req: Request, res: Response) => {
-    let user = ({
-        email: req.body.email,
-        password: req.body.password
-    })
-  if (!user.email) {
-    return res.status(422).json({
-      errors: {
-        email: 'is required',
-      },
-    });
-  }
-
-  if (!user.password) {
-    return res.status(422).json({
-      errors: {
-        password: 'is required',
-      },
-    });
-  }
-
-  const finalUser = new SecureUser(user);
-
-  finalUser.setPassword(user.password);
-
-  return finalUser.save()
-    .then(() => res.json({ user: finalUser.toAuthJSON() }));
-});
-
 //POST login route (optional, everyone has access)
-router.post('/login', auth.optional, (req: Request, res: Response, next: NextFunction): any => {
+router.post('/', auth.optional, (req: Request, res: Response, next: NextFunction): any => {
     let user = ({
         email: req.body.email,
         password: req.body.password

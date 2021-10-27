@@ -8,6 +8,6 @@ router.post('/getUser', auth.required, userController.getUser)
  
 router.get('/getAllUsers', auth.required, userController.getAll)
 
-router.post('/createUser', auth.required, userController.createUser)
+router.post('/createUser', auth.optional, userController.createUser)
 
 module.exports = router;
