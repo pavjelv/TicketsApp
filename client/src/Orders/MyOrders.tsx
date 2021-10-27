@@ -3,8 +3,9 @@ import {Link} from 'react-router-dom';
 import axios from 'axios';
 import {userService} from "../Services/UserService";
 import {TicketsState} from "@pavo/shared-services-shared/src";
+import {api_url} from "../environment";
 
-class MyTickets extends Component<unknown, TicketsState> {
+class MyOrders extends Component<unknown, TicketsState> {
     constructor(props: unknown) {
         super(props);
 
@@ -16,8 +17,8 @@ class MyTickets extends Component<unknown, TicketsState> {
 
     async componentDidMount() {
         if (userService.hasRole("User")) {
-        const tickets = (await axios.post(`http://localhost:5000/api/tickets/getMyTickets`, {
-             id : userService.getCredentials().id,
+        const tickets = (await axios.post(`${api_url}/orders/getMyOrders`, {
+             id : userService.getCredentials()._id,
         }, {
           headers: { 'Authorization':  userService.getCredentials().token}
         })).data;
@@ -29,8 +30,8 @@ class MyTickets extends Component<unknown, TicketsState> {
         }
 
         else if (userService.hasRole("Worker")){
-            const tickets = (await axios.post(`http://localhost:5000/api/tickets/getAssignedTickets`, {
-                id : userService.getCredentials().id,
+            const tickets = (await axios.post(`${api_url}/oders/getAssignedOrders`, {
+                id : userService.getCredentials()._id,
              }, {
                  headers: { 'Authorization':  userService.getCredentials().token}
              })).data;
@@ -42,8 +43,8 @@ class MyTickets extends Component<unknown, TicketsState> {
         }
 
         else {
-            const tickets = (await axios.post(`http://localhost:5000/api/tickets/getUnassignedUnresolved`, {
-                id : userService.getCredentials().id,
+            const tickets = (await axios.post(`${api_url}/orders/getUnassignedUnresolved`, {
+                id : userService.getCredentials()._id,
             }, {
                  headers: { 'Authorization':  userService.getCredentials().token}
             })).data;
@@ -88,4 +89,4 @@ class MyTickets extends Component<unknown, TicketsState> {
     }
 }
 
-export default MyTickets;
+export default MyOrders;

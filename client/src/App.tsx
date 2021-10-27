@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import {Route} from 'react-router-dom';
 import NavBar from './NavBar/NavBar';
-import Tickets from './Tickets/Tickets';
-import Ticket from './Ticket/Ticket';
+import Orders from './Orders/Orders';
+import Ticket from './Order/Ticket';
 import {LoginPage} from './LoginPage/LoginPage'
 import { PrivateRoute } from './Auth/PrivateRoute';
-import NewTicket from './Ticket/NewTicket'
+import NewTicket from './Order/NewTicket'
 import UserPage from './UserPage/UserPage'
-import MyTickets from './Tickets/MyTickets'
+import MyOrders from './Orders/MyOrders'
 import {RegistrationForm} from "./Registration/RegistrationForm";
 
 class App extends Component {
@@ -16,8 +16,8 @@ class App extends Component {
       <div>
         <NavBar/>
        
-        <PrivateRoute path='/myTickets' component={MyTickets}/>
-        <Route exact path='/' component={Tickets}/>
+        <PrivateRoute path='/myTickets' component={MyOrders}/>
+        <Route exact path='/' component={Orders}/>
         <Route exact path='/ticket/:id' component={Ticket}/>
         <Route path="/login" component={LoginPage} />
         <PrivateRoute path='/newTicket' component={NewTicket} />

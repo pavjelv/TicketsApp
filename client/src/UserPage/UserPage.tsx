@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import {userService} from "../Services/UserService";
+import {api_url} from "../environment";
 
 class UserPage extends Component<any, {user: any}> {
     constructor(props: unknown) {
@@ -12,7 +13,7 @@ class UserPage extends Component<any, {user: any}> {
 
     async componentDidMount() {
         const { match: { params } } = this.props;
-        const user = (await axios.post(`http://localhost:5000/api/user/getUser`, {
+        const user = (await axios.post(`${api_url}/user/getUser`, {
           id: params.id,
         }, {
           headers: { 'Authorization':  userService.getCredentials().token}

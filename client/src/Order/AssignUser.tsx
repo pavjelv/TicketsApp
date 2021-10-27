@@ -3,6 +3,7 @@ import axios from 'axios';
 import {withRouter} from 'react-router-dom';
 import {userService} from "../Services/UserService";
 import {CredentialsModel} from "@pavo/shared-services-shared/src";
+import {api_url} from "../environment";
 
 interface AssignUserState {
     assignee: string;
@@ -35,7 +36,7 @@ class AssignUser extends Component<any, AssignUserState> {
   }
 
   async componentDidMount() {
-    const users = (await axios.get(`http://localhost:5000/api/user/getAllUsers`, {
+    const users = (await axios.get(`${api_url}/user/getAllUsers`, {
         headers: { 'Authorization':  userService.getCredentials().token}
     })).data;
 

@@ -3,8 +3,9 @@ import {Link} from 'react-router-dom';
 import axios from 'axios';
 import {userService} from "../Services/UserService";
 import {TicketsState} from "@pavo/shared-services-shared/src";
+import {api_url} from "../environment";
 
-class Tickets extends Component<unknown, TicketsState> {
+class Orders extends Component<unknown, TicketsState> {
     constructor(props: unknown) {
         super(props);
 
@@ -15,7 +16,7 @@ class Tickets extends Component<unknown, TicketsState> {
     }
 
     async componentDidMount() {
-        const tickets = (await axios.get(`http://localhost:5000/api/tickets/allTickets`)).data;
+        const tickets = (await axios.get(`${api_url}/orders/allOrders`)).data;
         this.setState({
             tickets,
             credentials: userService.getCredentials(),
@@ -55,4 +56,4 @@ class Tickets extends Component<unknown, TicketsState> {
     }
 }
 
-export default Tickets;
+export default Orders;
