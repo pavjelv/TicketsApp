@@ -1,6 +1,6 @@
 import {CredentialsModel} from "./credentials.model";
 
-export interface TicketModel {
+export interface OrderModel {
     _id: string;
     title: string;
     reporter: any;
@@ -10,7 +10,7 @@ export interface TicketModel {
     isResolved: boolean;
 }
 
-export interface TicketsState {
-    tickets: TicketModel[];
+export interface OrdersState {
+    orders: OrderModel[];
     credentials: CredentialsModel;
 }
