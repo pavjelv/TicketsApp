@@ -6,7 +6,6 @@ export interface OrderModel {
     _id: string;
     participants: DetailedUserModel[];
     reporter: any;
-    assignee: any;
     product: ProductModel;
     isResolved: boolean;
 }

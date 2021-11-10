@@ -26,12 +26,29 @@ export function addParticipant (req: Request, res: Response) {
     const { payload: { id } } = req;
     SecureUser.findById(id).then((user: SecureUserModel) => {
         DetailedUser.find({"email" : user.email}).then((userProps: DetailedUserModel[]) => {
-            Order.update({_id: req.body.orderId}, {$push: { participants: userProps[0]._id || ''} }, null, function(err: unknown) {
-                if(err) {
-                    res.send(err);
-                }
-                res.status(200).send()
-            })
+            const orderId = req.body.orderId;
+            Order.findById(orderId)
+                .populate('product')
+                .exec((err: unknown, order: OrderModel)=> {
+                    if (err) {
+                        res.status(500).send();
+                        return;
+                    }
+                    if (order.participants?.length < order.product.participantsAmount) {
+                        Order.update({_id: orderId}, {$push: {participants: userProps[0]._id || ''}}, null, function (err: unknown) {
+                            if (err) {
+                                res.send(err);
+                            }
+                            res.status(200).send()
+                        })
+                    } else {
+                            res.status(500).json({
+                            errors: {
+                                participantsAmount: 'Too many participants!',
+                            },
+                        });
+                    }
+                })
         });
     });
 }
@@ -136,37 +153,4 @@ export function getMyOrders (req: Request, res: Response, next: NextFunction) {
             }
             next();
         });
-}
-
-export function getUnassignedUnresolvedOrders (_req: Request, res: Response, next: NextFunction) {
-    Order.find({"isResolved": false})
-        .populate('reporter')
-        .populate('assignee')
-        .exec((err: unknown, orders: OrderModel[])=> {
-        if (err) {
-            res.send(err);
-        } else if (!orders) {
-            res.status(404).send();
-        } else {
-            res.send(orders.filter((t) => !t.assignee));
-        }
-        next();
-    })
-}
-
-export function getAssignedOrders (req: Request, res: Response, next: NextFunction) {
-    Order.find({})
-        .populate('reporter')
-        .populate ('assignee')
-        .exec((err: unknown, orders: OrderModel[]) => {
-            if (err) {
-                res.send(err);
-            }
-            else if (!orders) {
-                res.status(404).send();
-            } else {
-                res.send(orders.filter((t) => t.assignee._id === req.body.id));
-            }
-            next();
-        })
 }

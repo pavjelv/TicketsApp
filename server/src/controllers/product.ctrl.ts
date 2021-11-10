@@ -21,7 +21,8 @@ export function addProduct (req: Request, res: Response, _next: NextFunction) {
     let product = ({
         title: req.body.title,
         description: req.body.description,
-        price: req.body.price
+        price: req.body.price,
+        participantsAmount: req.body.participantsAmount
     })
 
     if (!product.title) {
@@ -44,6 +45,14 @@ export function addProduct (req: Request, res: Response, _next: NextFunction) {
         return res.status(422).json({
             errors: {
                 price: 'is required',
+            },
+        });
+    }
+
+    if (!product.participantsAmount) {
+        return res.status(422).json({
+            errors: {
+                participantsAmount: 'is required',
             },
         });
     }

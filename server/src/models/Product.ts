@@ -14,6 +14,10 @@ const ProductSchema = new Schema<ProductDao>({
     price: {
         type: Number,
         required: true
+    },
+    participantsAmount: {
+        type: Number,
+        required: true
     }
 });
 
