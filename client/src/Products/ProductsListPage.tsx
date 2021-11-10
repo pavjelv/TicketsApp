@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
-import axios from 'axios';
 import {userService} from "../Services/UserService";
 import {ProductModel, ProductsState} from "@pavo/shared-services-shared/src";
-import {api_url} from "../environment";
+import axiosInstance from "../Auth/AxiosInstance";
 
 class ProductsListPage extends Component<any, ProductsState> {
     constructor(props: unknown) {
@@ -16,7 +15,7 @@ class ProductsListPage extends Component<any, ProductsState> {
     }
 
     async componentDidMount() {
-        const products: ProductModel[] = (await axios.get(`${api_url}/products/allProducts`)).data;
+        const products: ProductModel[] = (await axiosInstance.get(`/products/allProducts`)).data;
         this.setState({
             products,
             credentials: userService.getCredentials(),
@@ -24,10 +23,8 @@ class ProductsListPage extends Component<any, ProductsState> {
     }
 
      createOrder(id: string) {
-        axios.post(`${api_url}/orders/addOrder`, {
+        axiosInstance.post(`/orders/addOrder`, {
             product: id,
-        }, {
-                headers: { 'Authorization':  userService.getCredentials().token }
         }).then(() => {
             this.props.history.push('/');
         }, (error: unknown) => console.log(error));

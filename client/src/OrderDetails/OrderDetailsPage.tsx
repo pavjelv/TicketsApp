@@ -3,6 +3,7 @@ import axios from 'axios';
 import {OrderModel} from "@pavo/shared-services-shared/src";
 import {userService} from "../Services/UserService";
 import {api_url} from "../environment";
+import axiosInstance from "../Auth/AxiosInstance";
 
 class OrderDetailsPage extends Component<any, {order: OrderModel}> {
     constructor(props: unknown) {
@@ -15,14 +16,15 @@ class OrderDetailsPage extends Component<any, {order: OrderModel}> {
       }
 
       async componentDidMount() {
-        await this.refreshTicket();
+        await this.refreshOrder();
       }
 
-      async refreshTicket() {
+      refreshOrder(): void {
         const { match: { params } } = this.props;
-        const order = (await axios.get(`${api_url}/orders/getOrder/${params.id}`)).data;
-        this.setState({
-          order,
+        axiosInstance.get(`/orders/getOrder/${params.id}`).then((response) => {
+          this.setState({
+            order: response.data,
+          });
         });
       }
 
@@ -34,18 +36,15 @@ class OrderDetailsPage extends Component<any, {order: OrderModel}> {
           headers: { 'Authorization':  userService.getCredentials().token}
         });
 
-        await this.refreshTicket();
+        await this.refreshOrder();
       }
 
-      async assign(assignee: string) {
-        await axios.post(`${api_url}/tickets/assign`, {
-          ticketId : this.state.order._id,
-          id: assignee, 
-        }, {
-          headers: { 'Authorization':  userService.getCredentials().token}
+      participate(): void {
+        axiosInstance.put("/orders/addParticipant", {
+          orderId : this.state.order._id,
+        }).then(() => {
+          return this.refreshOrder()
         });
-
-        await this.refreshTicket();
       }
 
       async resolve() {
@@ -55,7 +54,7 @@ class OrderDetailsPage extends Component<any, {order: OrderModel}> {
           headers: { 'Authorization':  userService.getCredentials().token}
         });
 
-        await this.refreshTicket();
+        await this.refreshOrder();
       }
 
       render(): ReactElement {
@@ -67,32 +66,13 @@ class OrderDetailsPage extends Component<any, {order: OrderModel}> {
               <div className="jumbotron col-12">
                 <h1 className="display-3">{order.product.title}</h1>
                 <p className="lead">{order.product.description}</p>
+                <p className="lead">{order.product.price}</p>
                 <hr className="my-4" />
-                {/*{!ticket.answer &&*/}
-                {/*  <SubmitAnswer ticketId={ticket._id} submitAnswer={this.submitAnswer} />*/}
-                {/*}*/}
-                {/*{!ticket.assignee && */}
-                {/*    <p>No one has assigned to this ticket... Yet </p>    */}
-                {/*}*/}
-                {/*{userService.isAuthenticated() && !ticket.assignee &&*/}
-                {/*  <AssignUser ticketId={ticket._id} assign={this.assign.bind(this)}/> */}
-                {/*}*/}
-                {/*{userService.isAuthenticated() && ticket.assignee &&*/}
-                {/*    <Link to={`/user/${ticket.assignee._id}`}>*/}
-                {/*    <p>Assignee: {ticket.assignee.firstName} {ticket.assignee.lastName}</p>*/}
-                {/*    </Link>*/}
-                {/*}*/}
-                {/*<p>Answer: {ticket.answer} </p>*/}
-                {/*{ userService.isAuthenticated() && ticket.assignee && ticket.assignee._id === userService.getCredentials()._id && !ticket.isResolved  &&*/}
-                {/*    <p className="lead">                  */}
-                {/*      <button type="button" className="btn btn-success" onClick={() => {this.resolve()}}>Resolve</button>*/}
-                {/*    </p> */}
-                {/*}*/}
-                {/*{ userService.isAuthenticated() && !ticket.isResolved && ticket.reporter._id === userService.getCredentials()._id  &&*/}
-                {/*  <p className="lead">                  */}
-                {/*      <button type="button" className="btn btn-success" onClick={() => {this.resolve()}}>Resolve</button>*/}
-                {/*  </p> */}
-                {/*}   */}
+                { userService.isAuthenticated() &&
+                  <p className="lead">
+                      <button type="button" className="btn btn-success" onClick={() => {this.participate()}}>Participate</button>
+                  </p>
+                }
               </div>
             </div>   
           </div>

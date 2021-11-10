@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import axios from 'axios';
 import {userService} from "../Services/UserService";
-import {api_url} from "../environment";
+import axiosInstance from "../Auth/AxiosInstance";
 
 class UserPage extends Component<any, {user: any}> {
     constructor(props: unknown) {
@@ -13,12 +12,11 @@ class UserPage extends Component<any, {user: any}> {
 
     async componentDidMount() {
         const { match: { params } } = this.props;
-        const user = (await axios.post(`${api_url}/user/getUser`, {
+        const user = (await axiosInstance.post(`/user/getUser`, {
           id: params.id,
         }, {
           headers: { 'Authorization':  userService.getCredentials().token}
         })).data;
-        console.log(user)
         this.setState({
             user,
         });

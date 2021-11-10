@@ -3,7 +3,7 @@ import {Route} from 'react-router-dom';
 import NavBar from './NavBar/NavBar';
 import OrdersListPage from './Orders/OrdersListPage';
 import OrderDetailsPage from './OrderDetails/OrderDetailsPage';
-import {LoginPage} from './LoginPage/LoginPage'
+import LoginPage from './LoginPage/LoginPage'
 import { PrivateRoute } from './Auth/PrivateRoute';
 import UserPage from './UserPage/UserPage'
 import MyOrders from './Orders/MyOrders'

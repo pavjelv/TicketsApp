@@ -1,8 +1,9 @@
 import React, {ChangeEvent, ReactElement} from 'react';
 import {userService} from '../Services/UserService';
 import {LoginPageState} from "@pavo/shared-services-shared/src";
+import {withRouter} from "react-router-dom";
 
-class LoginPage extends React.Component<unknown, LoginPageState> {
+class LoginPage extends React.Component<any, LoginPageState> {
         constructor(props: unknown) {
             super(props);
     
@@ -46,9 +47,12 @@ class LoginPage extends React.Component<unknown, LoginPageState> {
     
             this.setState({ loading: true });
             userService.login(email, password)
-                // .then(
-                //     error => this.setState({ error, loading: false })
-                // );
+                .then(
+                    () => {
+                        this.props.history.push('/');
+                    },
+                    error => this.setState({ error, loading: false })
+                );
         }
     
         render(): ReactElement {
@@ -86,4 +90,4 @@ class LoginPage extends React.Component<unknown, LoginPageState> {
         }
     }
     
-export { LoginPage }; 
+export default withRouter(LoginPage);
