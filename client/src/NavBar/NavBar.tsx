@@ -46,7 +46,7 @@ function NavBar(): ReactElement {
             }
             { userService.isAuthenticated() &&
                  <div> 
-                    <Link to={`/user/${userService.getCredentials().id}`}>
+                    <Link to={`/user/${userService.getCredentials()._id}`}>
                         <span className="mr-2 text-white ">{userService.getCredentials().firstName}</span>
                     </Link>
                     <Link to="/login">

@@ -3,8 +3,9 @@ import {Link} from 'react-router-dom';
 import axios from 'axios';
 import {userService} from "../Services/UserService";
 import {OrdersState} from "@pavo/shared-services-shared/src";
+import {api_url} from "../environment";
 
-class MyTickets extends Component<unknown, OrdersState> {
+class MyOrders extends Component<unknown, OrdersState> {
     constructor(props: unknown) {
         super(props);
 
@@ -16,40 +17,40 @@ class MyTickets extends Component<unknown, OrdersState> {
 
     async componentDidMount() {
         if (userService.hasRole("User")) {
-        const tickets = (await axios.post(`http://localhost:5000/api/tickets/getMyTickets`, {
-             id : userService.getCredentials().id,
+        const orders = (await axios.post(`${api_url}/orders/getMyOrders`, {
+             id : userService.getCredentials()._id,
         }, {
           headers: { 'Authorization':  userService.getCredentials().token}
         })).data;
 
         this.setState({
-            orders: tickets,
+            orders,
             credentials: userService.getCredentials(),
         });
         }
 
         else if (userService.hasRole("Worker")){
-            const tickets = (await axios.post(`http://localhost:5000/api/tickets/getAssignedTickets`, {
-                id : userService.getCredentials().id,
+            const orders = (await axios.post(`${api_url}/oders/getAssignedOrders`, {
+                id : userService.getCredentials()._id,
              }, {
                  headers: { 'Authorization':  userService.getCredentials().token}
              })).data;
 
         this.setState({
-            orders: tickets,
+            orders,
             credentials: userService.getCredentials(),
         });
         }
 
         else {
-            const tickets = (await axios.post(`http://localhost:5000/api/tickets/getUnassignedUnresolved`, {
-                id : userService.getCredentials().id,
+            const orders = (await axios.post(`${api_url}/orders/getUnassignedUnresolved`, {
+                id : userService.getCredentials()._id,
             }, {
                  headers: { 'Authorization':  userService.getCredentials().token}
             })).data;
 
             this.setState({
-                orders: tickets,
+                orders,
                 credentials: userService.getCredentials(),
             });
         }
@@ -66,7 +67,7 @@ class MyTickets extends Component<unknown, OrdersState> {
                     </div>
                 }
                 <div className="row">
-                    {this.state.orders === null && <p>Loading tickets... </p>}
+                    {this.state.orders === null && <p>Loading orders... </p>}
                     {
                         this.state.orders && this.state.orders.map(ticket => (
                             <div key={ticket._id} className="col-sm-12 col-md-4 col-lg-3">
@@ -88,4 +89,4 @@ class MyTickets extends Component<unknown, OrdersState> {
     }
 }
 
-export default MyTickets;
+export default MyOrders;

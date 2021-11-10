@@ -9,7 +9,6 @@
     "alwaysStrict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "exactOptionalPropertyTypes": true,
     "noImplicitReturns": true,
     "noUncheckedIndexedAccess": true,
     "skipLibCheck": true,
@@ -20,7 +19,12 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "strict": false
+    "strict": false,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ]
   },
   "include": [
     "src"

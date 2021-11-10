@@ -5,6 +5,7 @@ import SubmitAnswer from './AddAnswer'
 import AssignUser from './AssignUser'
 import {OrderModel} from "@pavo/shared-services-shared/src";
 import {userService} from "../Services/UserService";
+import {api_url} from "../environment";
 
 class Ticket extends Component<any, {ticket: OrderModel}> {
     constructor(props: unknown) {
@@ -22,14 +23,14 @@ class Ticket extends Component<any, {ticket: OrderModel}> {
 
       async refreshTicket() {
         const { match: { params } } = this.props;
-        const ticket = (await axios.get(`http://localhost:5000/api/tickets/getTicket/${params.id}`)).data;
+        const ticket = (await axios.get(`${api_url}/tickets/getTicket/${params.id}`)).data;
         this.setState({
           ticket,
         });
       }
 
       async submitAnswer(userAnswer: string) {
-        await axios.post(`http://localhost:5000/api/tickets/answer`, {
+        await axios.post(`${api_url}/tickets/answer`, {
           ticketId : this.state.ticket._id,
           answer: userAnswer, 
         }, {
@@ -40,7 +41,7 @@ class Ticket extends Component<any, {ticket: OrderModel}> {
       }
 
       async assign(assignee: string) {
-        await axios.post(`http://localhost:5000/api/tickets/assign`, {
+        await axios.post(`${api_url}/tickets/assign`, {
           ticketId : this.state.ticket._id,
           id: assignee, 
         }, {
@@ -51,7 +52,7 @@ class Ticket extends Component<any, {ticket: OrderModel}> {
       }
 
       async resolve() {
-        await axios.post(`http://localhost:5000/api/tickets/resolve`, {
+        await axios.post(`${api_url}/tickets/resolve`, {
           ticketId : this.state.ticket._id,
         }, {
           headers: { 'Authorization':  userService.getCredentials().token}
@@ -90,12 +91,12 @@ class Ticket extends Component<any, {ticket: OrderModel}> {
                     </Link>
                 }
                 <p>Answer: {ticket.answer} </p>
-                { userService.isAuthenticated() && ticket.assignee && ticket.assignee._id === userService.getCredentials().id && !ticket.isResolved  &&
+                { userService.isAuthenticated() && ticket.assignee && ticket.assignee._id === userService.getCredentials()._id && !ticket.isResolved  &&
                     <p className="lead">                  
                       <button type="button" className="btn btn-success" onClick={() => {this.resolve()}}>Resolve</button>
                     </p> 
                 }
-                { userService.isAuthenticated() && !ticket.isResolved && ticket.reporter._id === userService.getCredentials().id  &&
+                { userService.isAuthenticated() && !ticket.isResolved && ticket.reporter._id === userService.getCredentials()._id  &&
                   <p className="lead">                  
                       <button type="button" className="btn btn-success" onClick={() => {this.resolve()}}>Resolve</button>
                   </p> 

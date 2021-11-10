@@ -2,7 +2,7 @@ import React, {ChangeEvent, ReactElement} from 'react';
 import {userService} from '../Services/UserService';
 import {RegistrationPageModel} from "@pavo/shared-services-shared/src";
 
-export class RegistrationForm extends React.Component<unknown, RegistrationPageModel> {
+export class RegistrationForm extends React.Component<any, RegistrationPageModel> {
     constructor(props: unknown) {
         super(props);
 
@@ -55,10 +55,10 @@ export class RegistrationForm extends React.Component<unknown, RegistrationPageM
         this.setState({ submitted: true });
 
         this.setState({ loading: true });
-        userService.register(this.state);
-        // .then(
-        //     error => this.setState({ error, loading: false })
-        // );
+        userService.register(this.state)
+        .then(() => {
+            this.props.history.push("/")
+        });
     }
 
     render(): ReactElement {

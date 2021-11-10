@@ -1,4 +1,4 @@
-import {CredentialsModel, RegistrationPageModel} from "@pavo/shared-services-shared/src";
+import {CredentialsModel, RegistrationPageModel, UserRole} from "@pavo/shared-services-shared/src";
 import {api_url} from "../environment";
 
 export const userService = {
@@ -20,8 +20,8 @@ function isAuthenticated() {
     return !!localStorage.getItem('credentials');
 }
 
-function hasRole(role: string) {
-    return isAuthenticated() && getCredentials().role === role;
+function hasRole(role: UserRole) {
+    return isAuthenticated() && getCredentials()?.role === role;
 }
 
 function register(model: RegistrationPageModel): Promise<CredentialsModel> {

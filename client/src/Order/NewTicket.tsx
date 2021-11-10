@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import axios from 'axios';
 import {userService} from "../Services/UserService";
+import {api_url} from "../environment";
 
 interface NewTicketState {
     disabled: boolean;
@@ -36,7 +37,7 @@ class NewTicket extends Component<any, NewTicketState> {
           disabled: true,
         });
 
-        await axios.post('http://localhost:5000/api/tickets/addTicket',{
+        await axios.post(`${api_url}/tickets/addTicket`,{
             title: this.state.title,
             description: this.state.description,
           }, {
