@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import axios from 'axios';
 import {userService} from "../Services/UserService";
 import {OrdersState} from "@pavo/shared-services-shared/src";
-import {api_url} from "../environment";
+import axiosInstance from "../Auth/AxiosInstance";
 
 class Orders extends Component<unknown, OrdersState> {
     constructor(props: unknown) {
@@ -16,7 +15,7 @@ class Orders extends Component<unknown, OrdersState> {
     }
 
     async componentDidMount() {
-        const orders = (await axios.get(`${api_url}/orders/allOrders`)).data;
+        const orders = (await axiosInstance.get(`/orders/allOrders`)).data;
         this.setState({
             orders,
             credentials: userService.getCredentials(),

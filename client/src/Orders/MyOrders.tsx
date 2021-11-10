@@ -4,6 +4,7 @@ import axios from 'axios';
 import {userService} from "../Services/UserService";
 import {OrdersState} from "@pavo/shared-services-shared/src";
 import {api_url} from "../environment";
+import axiosInstance from "../Auth/AxiosInstance";
 
 class MyOrders extends Component<unknown, OrdersState> {
     constructor(props: unknown) {
@@ -30,10 +31,8 @@ class MyOrders extends Component<unknown, OrdersState> {
         }
 
         else if (userService.hasRole("Worker")){
-            const orders = (await axios.post(`${api_url}/oders/getAssignedOrders`, {
+            const orders = (await axiosInstance.post(`/oders/getAssignedOrders`, {
                 id : userService.getCredentials()._id,
-             }, {
-                 headers: { 'Authorization':  userService.getCredentials().token}
              })).data;
 
         this.setState({
@@ -43,10 +42,8 @@ class MyOrders extends Component<unknown, OrdersState> {
         }
 
         else {
-            const orders = (await axios.post(`${api_url}/orders/getUnassignedUnresolved`, {
+            const orders = (await axiosInstance.post(`/orders/getUnassignedUnresolved`, {
                 id : userService.getCredentials()._id,
-            }, {
-                 headers: { 'Authorization':  userService.getCredentials().token}
             })).data;
 
             this.setState({

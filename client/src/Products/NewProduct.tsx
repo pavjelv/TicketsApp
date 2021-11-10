@@ -1,14 +1,13 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
-import axios from 'axios';
-import {userService} from "../Services/UserService";
-import {api_url} from "../environment";
+import axiosInstance from "../Auth/AxiosInstance";
 
 interface NewProductState {
     disabled: boolean;
     title: string;
     description: string;
     price: number;
+    participantsAmount: number;
 }
 
 class NewProduct extends Component<any, NewProductState> {
@@ -20,6 +19,7 @@ class NewProduct extends Component<any, NewProductState> {
             title: '',
             description: '',
             price: 0,
+            participantsAmount: 0,
         };
     }
     updateDescription(value: string) {
@@ -34,6 +34,12 @@ class NewProduct extends Component<any, NewProductState> {
         });
     }
 
+    updateAmount(value: string) {
+        this.setState({
+            participantsAmount: parseInt(value),
+        });
+    }
+
     updateTitle(value: string) {
         this.setState({
           title: value,
@@ -45,13 +51,12 @@ class NewProduct extends Component<any, NewProductState> {
           disabled: true,
         });
 
-        await axios.post(`${api_url}/products/addProduct`,{
+        await axiosInstance.post(`/products/addProduct`,{
             title: this.state.title,
             description: this.state.description,
             price: this.state.price,
-          }, {
-            headers: { 'Authorization':  userService.getCredentials().token}
-        });
+            participantsAmount: this.state.participantsAmount,
+          });
 
         this.props.history.push('/products');
     }
@@ -92,6 +97,16 @@ class NewProduct extends Component<any, NewProductState> {
                               onBlur={(e) => {this.updatePrice(e.target.value)}}
                               className="form-control"
                               placeholder="Price."
+                          />
+                      </div>
+                      <div className="form-group">
+                          <label>Participants Amount:</label>
+                          <input
+                              disabled={this.state.disabled}
+                              type="number"
+                              onBlur={(e) => {this.updateAmount(e.target.value)}}
+                              className="form-control"
+                              placeholder="Amount."
                           />
                       </div>
                     <button
