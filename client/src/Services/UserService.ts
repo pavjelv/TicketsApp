@@ -13,7 +13,11 @@ export const userService = {
 
 function getCredentials(): CredentialsModel {
     // return {firstName: "", id: "", role: "", token: ""};
-    return JSON.parse(localStorage.getItem('credentials')).credentials;
+    const credentials = localStorage.getItem('credentials');
+    if (credentials) {
+        return JSON.parse(credentials).credentials;
+    }
+    return null;
 }
 
 function isAuthenticated() {

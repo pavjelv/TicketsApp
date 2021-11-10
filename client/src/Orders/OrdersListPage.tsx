@@ -26,24 +26,17 @@ class Orders extends Component<unknown, OrdersState> {
     render() {
         return (
             <div className="container">
-                 { this.state.credentials && this.state.credentials && this.state.credentials.role === 'User' &&
-                    <div className= "float-right"> 
-                    <Link to='/newTicket'>
-                            <button type="button" className="btn btn-primary btn-lg">New ticket</button>
-                    </Link>
-                    </div>
-                }
                 <div className="row">
-                    {this.state.orders === null && <p>Loading tickets... </p>}
+                    {this.state.orders === null && <p>Loading orders... </p>}
                     {
                         this.state.orders && this.state.orders.map(order => (
                             <div key={order._id} className="col-sm-12 col-md-4 col-lg-3">
-                            <Link to={`/ticket/${order._id}`}>
-                             <div className={"card text-white" + (!order.isResolved ? ' bg-danger mb-3' : ' bg-success mb-3')}>
-                                <div className="card-header">Reporter: {order.reporter.firstName} {order.reporter.lastName}</div>
+                            <Link to={`/order/${order._id}`}>
+                             <div className={"card text-white bg-success mb-3"}>
+                                <div className="card-header">{order.product?.title}</div>
                                 <div className="card-body">
-                                <h2 className="card-title">{order.title}</h2>
-                                <h4 className="card-text">{order.description}</h4>
+                                    <h2 className="card-title">{order.product?.description}</h2>
+                                    <h4 className="card-text">{order.product?.price}</h4>
                                 </div>
                             </div>
                             </Link>
