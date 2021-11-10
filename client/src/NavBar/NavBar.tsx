@@ -8,14 +8,6 @@ function NavBar(): ReactElement {
             <Link className="navbar-brand" to="/">
                 Together Cheaper
             </Link>
-            
-            { userService.hasRole("User") &&
-                 <div>
-                    <Link to={`/myTickets`}>
-                        <span className="mr-2 text-white ">Reported tickets</span>
-                    </Link>
-                </div>
-            }
             { userService.hasRole("Worker") &&
                  <div>
                     <Link to={`/myTickets`}>
@@ -23,10 +15,10 @@ function NavBar(): ReactElement {
                     </Link>
                 </div>
             }
-            { userService.hasRole("Admin") &&
+            { (userService.hasRole("Admin") || userService.hasRole("User")) &&
                  <div>
-                    <Link to={`/myTickets`}>
-                        <span className="mr-2 text-white ">Unresolved and unassigned tickets</span>
+                    <Link to={`/products`}>
+                        <span className="mr-2 text-white ">All Products</span>
                     </Link>
                 </div>
             }

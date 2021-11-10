@@ -4,13 +4,14 @@ import axios from 'axios';
 import {userService} from "../Services/UserService";
 import {api_url} from "../environment";
 
-interface NewTicketState {
+interface NewProductState {
     disabled: boolean;
     title: string;
     description: string;
+    price: number;
 }
 
-class NewTicket extends Component<any, NewTicketState> {
+class NewProduct extends Component<any, NewProductState> {
     constructor(props: unknown) {
         super(props);
 
@@ -18,6 +19,7 @@ class NewTicket extends Component<any, NewTicketState> {
             disabled: false,
             title: '',
             description: '',
+            price: 0,
         };
     }
     updateDescription(value: string) {
@@ -25,8 +27,14 @@ class NewTicket extends Component<any, NewTicketState> {
           description: value,
         });
       }
-    
-      updateTitle(value: string) {
+
+    updatePrice(value: string) {
+        this.setState({
+            price: parseInt(value),
+        });
+    }
+
+    updateTitle(value: string) {
         this.setState({
           title: value,
         });
@@ -37,14 +45,15 @@ class NewTicket extends Component<any, NewTicketState> {
           disabled: true,
         });
 
-        await axios.post(`${api_url}/tickets/addTicket`,{
+        await axios.post(`${api_url}/products/addProduct`,{
             title: this.state.title,
             description: this.state.description,
+            price: this.state.price,
           }, {
             headers: { 'Authorization':  userService.getCredentials().token}
         });
 
-        this.props.history.push('/');
+        this.props.history.push('/products');
     }
 
     render() {
@@ -53,28 +62,38 @@ class NewTicket extends Component<any, NewTicketState> {
             <div className="row">
               <div className="col-12">
                 <div className="card border-primary">
-                  <div className="card-header">New Ticket</div>
+                  <div className="card-header">New Product</div>
                   <div className="card-body text-left">
                     <div className="form-group">
-                      <label htmlFor="exampleInputEmail1">Title:</label>
+                      <label>Title:</label>
                       <input
                         disabled={this.state.disabled}
                         type="text"
                         onBlur={(e) => {this.updateTitle(e.target.value)}}
                         className="form-control"
-                        placeholder="Give your question a title."
+                        placeholder="Give your product a title."
                       />
                     </div>
                     <div className="form-group">
-                      <label htmlFor="exampleInputEmail1">Description:</label>
+                      <label>Description:</label>
                       <input
                         disabled={this.state.disabled}
                         type="text"
                         onBlur={(e) => {this.updateDescription(e.target.value)}}
                         className="form-control"
-                        placeholder="Give more context to your question."
+                        placeholder="Give more context to your product."
                       />
                     </div>
+                      <div className="form-group">
+                          <label>Price:</label>
+                          <input
+                              disabled={this.state.disabled}
+                              type="number"
+                              onBlur={(e) => {this.updatePrice(e.target.value)}}
+                              className="form-control"
+                              placeholder="Price."
+                          />
+                      </div>
                     <button
                       disabled={this.state.disabled}
                       className="btn btn-primary"
@@ -90,4 +109,4 @@ class NewTicket extends Component<any, NewTicketState> {
       }
 }
 
-export default withRouter(NewTicket);
+export default withRouter(NewProduct);

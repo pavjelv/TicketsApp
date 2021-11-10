@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import {Route} from 'react-router-dom';
 import NavBar from './NavBar/NavBar';
-import Orders from './Orders/Orders';
-import Ticket from './Order/Ticket';
+import OrdersListPage from './Orders/OrdersListPage';
+import OrderDetailsPage from './OrderDetails/OrderDetailsPage';
 import {LoginPage} from './LoginPage/LoginPage'
 import { PrivateRoute } from './Auth/PrivateRoute';
-import NewTicket from './Order/NewTicket'
 import UserPage from './UserPage/UserPage'
 import MyOrders from './Orders/MyOrders'
 import {RegistrationForm} from "./Registration/RegistrationForm";
+import ProductsListPage from "./Products/ProductsListPage";
+import NewProduct from "./Products/NewProduct";
 
 class App extends Component {
   render() {
@@ -17,11 +18,12 @@ class App extends Component {
         <NavBar/>
        
         <PrivateRoute path='/myTickets' component={MyOrders}/>
-        <Route exact path='/' component={Orders}/>
-        <Route exact path='/ticket/:id' component={Ticket}/>
+        <Route exact path='/' component={OrdersListPage}/>
+        <Route exact path='/order/:id' component={OrderDetailsPage}/>
         <Route path="/login" component={LoginPage} />
-        <PrivateRoute path='/newTicket' component={NewTicket} />
+        <PrivateRoute path='/newProduct' component={NewProduct} />
         <PrivateRoute path='/user/:id' component={UserPage}/>
+        <PrivateRoute path='/products' component={ProductsListPage}/>
         <Route path="/register" component={RegistrationForm} />
         {/* <Route exact path='/user' component={User}/> */}
 
