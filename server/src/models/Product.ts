@@ -11,16 +11,11 @@ const ProductSchema = new Schema<ProductDao>({
         type: String,
         required: true
     },
-    participant: {
-        type: Schema.Types.ObjectId,
-        ref: 'DetailedUser'
+    price: {
+        type: Number,
+        required: true
     }
 });
-
-ProductSchema.methods.addParticipant = function(_id: string): Promise<unknown> {
-    this.participant = _id;
-    return this.save();
-}
 
 export const Product = mongoose.model('Product', ProductSchema);
 

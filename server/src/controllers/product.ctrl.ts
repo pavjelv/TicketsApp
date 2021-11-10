@@ -20,13 +20,30 @@ export function addProduct (req: Request, res: Response, _next: NextFunction) {
 
     let product = ({
         title: req.body.title,
-        description: req.body.description
+        description: req.body.description,
+        price: req.body.price
     })
 
     if (!product.title) {
         return res.status(422).json({
             errors: {
                 title: 'is required',
+            },
+        });
+    }
+
+    if (!product.description) {
+        return res.status(422).json({
+            errors: {
+                description: 'is required',
+            },
+        });
+    }
+
+    if (!product.price) {
+        return res.status(422).json({
+            errors: {
+                price: 'is required',
             },
         });
     }

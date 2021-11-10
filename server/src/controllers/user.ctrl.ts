@@ -63,7 +63,7 @@ export function createUser (req: Request, res: Response, _next: NextFunction) {
                     lastName: req.body.lastName,
                     phone: req.body.phone,
                     token: "STDAFX.H",
-                    role: req.body.role,
+                    role: "User",
                     email: req.body.email
                 }
             );
