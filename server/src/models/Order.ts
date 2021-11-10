@@ -4,25 +4,17 @@ import {OrderDao} from "./dao/order.dao";
 const Schema = mongoose.Schema;
 
 const OrderSchema = new Schema<OrderDao>({
-    title: {
-        type: String,
-        required: false
+    product : {
+        type: Schema.Types.ObjectId,
+        ref: 'Product'
     },
     reporter: {
         type: Schema.Types.ObjectId,
         ref: 'DetailedUser'
     },
-    description: {
-        type: String,
-        required: true
-    },
     assignee: {
         type: Schema.Types.ObjectId,
         ref: 'DetailedUser'
-    },
-    answer: {
-        type: String,
-        require: false
     },
     isResolved: {
         type: Boolean
@@ -40,11 +32,6 @@ OrderSchema.methods.addReporter = function(_id: string): Promise<unknown> {
 
 OrderSchema.methods.assign = function(assigneeId: string): Promise<unknown> {
     this.assignee = assigneeId;
-    return this.save();
-}
-
-OrderSchema.methods.addAnswer = function(answer: string): Promise<unknown> {
-    this.answer = answer;
     return this.save();
 }
 

@@ -5,37 +5,20 @@ import {DetailedUserModel, SecureUserModel, OrderModel} from "@pavo/shared-servi
 import {OrderDao} from "../models/dao/order.dao";
 import {NextFunction, Request, Response} from "express";
 
-export function addOrder (req: Request, res: Response, next: NextFunction) {
-    // @ts-ignore
-    const { payload: { id } } = req;
-    const order = new Order (
-        {
-            title: req.body.title,
-            description: req.body.description,
-            answer: req.body.answer,
-            isResolved: false,
-        }
-    );
-    saveOrder(order);
+export function addOrder (req: Request, res: Response) {
+    let order = ({
+        product: req.body.product
+    })
 
-    function saveOrder(obj: OrderModel) {
-        SecureUser.findById(id).then((user: SecureUserModel) => {
-            DetailedUser.find({"email" : user.email}).then((userProps: DetailedUserModel[]) => {
-                new Order(obj).save((err: unknown, order: OrderDao): any => {
-                    if (err) {
-                        res.send(err);
-                    } else if (!order) {
-                        res.status(400).send();
-                    } else {
-                        return order.addReporter(userProps[0]._id || '').then((_order) => {
-                            return res.send(_order)
-                        });
-                    }
-                    next();
-                })
-            })
-        })
-    }
+    const finalOrder = new Order(order);
+    return finalOrder.save((err: unknown, order: OrderDao): any => {
+        if (err) {
+            res.send(err);
+        } else if (!order) {
+            res.status(400).send();
+        }
+        res.status(200).send();
+    })
 }
 
 export function assign (req: Request, res: Response, next: NextFunction) {
@@ -71,8 +54,7 @@ export function resolve (req: Request, res: Response, next: NextFunction) {
 
 export function getAll (_req: Request, res: Response, next: NextFunction) {
     Order.find({})
-        .populate('reporter')
-        .populate('assignee')
+        .populate('product')
         .exec((err: unknown, orders: OrderModel[])=> {
             if (err)
                 res.send(err)
