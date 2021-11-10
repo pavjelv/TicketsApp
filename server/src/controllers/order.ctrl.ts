@@ -21,6 +21,21 @@ export function addOrder (req: Request, res: Response) {
     })
 }
 
+export function addParticipant (req: Request, res: Response) {
+    // @ts-ignore
+    const { payload: { id } } = req;
+    SecureUser.findById(id).then((user: SecureUserModel) => {
+        DetailedUser.find({"email" : user.email}).then((userProps: DetailedUserModel[]) => {
+            Order.update({_id: req.body.orderId}, {$push: { participants: userProps[0]._id || ''} }, null, function(err: unknown) {
+                if(err) {
+                    res.send(err);
+                }
+                res.status(200).send()
+            })
+        });
+    });
+}
+
 export function assign (req: Request, res: Response, next: NextFunction) {
     Order.updateOne(
         {_id: req.body.orderId},
@@ -28,15 +43,6 @@ export function assign (req: Request, res: Response, next: NextFunction) {
         null,
         function(err: unknown) {
         if (err) {
-            return next(err)
-        }
-        res.status(200).send()
-    })
-}
-
-export function addAnswer (req: Request, res: Response, next: NextFunction) {
-    Order.updateOne({_id: req.body.orderId}, {$set:{"answer": req.body.answer}}, null, function(err: unknown) {
-        if(err) {
             return next(err)
         }
         res.status(200).send()
@@ -55,6 +61,7 @@ export function resolve (req: Request, res: Response, next: NextFunction) {
 export function getAll (_req: Request, res: Response, next: NextFunction) {
     Order.find({})
         .populate('product')
+        .populate('participants')
         .exec((err: unknown, orders: OrderModel[])=> {
             if (err)
                 res.send(err)
@@ -68,8 +75,8 @@ export function getAll (_req: Request, res: Response, next: NextFunction) {
 
 export function getOrder (req: Request, res: Response, next: NextFunction) {
     Order.findById(req.params.id)
-        .populate('reporter')
-        .populate('assignee')
+        .populate('product')
+        .populate('participants')
         .exec((err: unknown, order: OrderModel)=> {
         if (err)
             res.send(err)

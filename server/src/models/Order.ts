@@ -8,6 +8,10 @@ const OrderSchema = new Schema<OrderDao>({
         type: Schema.Types.ObjectId,
         ref: 'Product'
     },
+    participants: [{
+      type: Schema.Types.ObjectId,
+      ref: "DetailedUser"
+    }],
     reporter: {
         type: Schema.Types.ObjectId,
         ref: 'DetailedUser'
