@@ -11,6 +11,8 @@ router.post('/addOrder', auth.required, orderService.addOrder)
 
 router.put('/addParticipant', auth.required, orderService.addParticipant)
 
+router.put('/removeParticipant', auth.required, orderService.removeParticipant)
+
 router.get('/allOrders', auth.optional, orderService.getAll)
 
 router.get('/getOrder/:id', auth.optional, orderService.getOrder)
