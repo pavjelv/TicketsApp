@@ -14,8 +14,16 @@ const ProductSchema = new Schema<ProductDao>({
     price: {
         type: Number,
         required: true
+    },
+    participantsAmount: {
+        type: Number,
+        required: true
     }
 });
 
-export const Product = mongoose.model('Product', ProductSchema);
+export interface IProductRepository {
+
+}
+
+export const ProductRepository = mongoose.model('Product', ProductSchema);
 
