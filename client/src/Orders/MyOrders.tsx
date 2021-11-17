@@ -19,7 +19,7 @@ class MyOrders extends Component<unknown, OrdersState> {
     async componentDidMount() {
         if (userService.hasRole("User")) {
         const orders = (await axios.post(`${api_url}/orders/getMyOrders`, {
-             id : userService.getCredentials()._id,
+             id : userService.getCredentials().id,
         }, {
           headers: { 'Authorization':  userService.getCredentials().token}
         })).data;
@@ -32,7 +32,7 @@ class MyOrders extends Component<unknown, OrdersState> {
 
         else if (userService.hasRole("Worker")){
             const orders = (await axiosInstance.post(`/oders/getAssignedOrders`, {
-                id : userService.getCredentials()._id,
+                id : userService.getCredentials().id,
              })).data;
 
         this.setState({
@@ -43,7 +43,7 @@ class MyOrders extends Component<unknown, OrdersState> {
 
         else {
             const orders = (await axiosInstance.post(`/orders/getUnassignedUnresolved`, {
-                id : userService.getCredentials()._id,
+                id : userService.getCredentials().id,
             })).data;
 
             this.setState({

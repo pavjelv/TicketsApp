@@ -1,52 +1,63 @@
 import React, {ReactElement} from 'react';
 import {Link} from 'react-router-dom';
 import {userService} from '../Services/UserService';
+import {Menu, Layout, Button} from "antd";
+const { Header} = Layout;
 
 function NavBar(): ReactElement {
     return (
-        <nav className="navbar navbar-dark bg-primary fixed-top">
-            <Link className="navbar-brand" to="/">
-                Together Cheaper
-            </Link>
-            { userService.hasRole("Worker") &&
-                 <div>
-                    <Link to={`/myTickets`}>
-                        <span className="mr-2 text-white ">Assigned tickets</span>
+        <Header className="main-header">
+            <Menu
+                theme="dark"
+                mode="horizontal">
+                <Menu.Item
+                    key="1">
+                    <Link to={`/`}>
+                        All Orders
                     </Link>
-                </div>
-            }
-            { (userService.hasRole("Admin") || userService.hasRole("User")) &&
-                 <div>
+                </Menu.Item>
+                { (userService.hasRole("Admin") || userService.hasRole("User")) &&
+                <Menu.Item
+                    key="2">
                     <Link to={`/products`}>
-                        <span className="mr-2 text-white ">All Products</span>
+                        All Products
                     </Link>
-                </div>
-            }
-            { !userService.isAuthenticated() &&
-                <Link to="/login">
-                    <button className="btn btn-dark">
-                        Sign In
-                    </button>
-                </Link>
-            }
-            { !userService.isAuthenticated() &&
-                <Link to="/register">
-                    <button className="btn btn-dark">
-                        Sign Up
-                    </button>
-                </Link>
-            }
-            { userService.isAuthenticated() &&
-                 <div> 
-                    <Link to={`/user/${userService.getCredentials()._id}`}>
-                        <span className="mr-2 text-white ">{userService.getCredentials().firstName}</span>
-                    </Link>
-                    <Link to="/login">
-                    <button className="btn btn-dark" onClick={() => {userService.logout(); }}>Sign Out</button>
-                    </Link>
-                 </div>
-            }
-        </nav>
+                </Menu.Item>
+                }
+            </Menu>
+            <div className="header-button-panel">
+                { !userService.isAuthenticated() &&
+                    <Button type="primary" style={{ marginRight: "10px" }}>
+                        <Link to={`/login`}>
+                            <span>Sign In</span>
+                        </Link>
+                    </Button>
+                }
+                { !userService.isAuthenticated() &&
+                    <Button type="primary">
+                        <Link to={`/register`}>
+                            <span>Sign Up</span>
+                        </Link>
+                    </Button>
+                }
+                { userService.isAuthenticated() &&
+                    <div>
+                        <Link to={`/user/${userService.getCredentials().id}`}>
+                            <span>{userService.getCredentials().firstName}</span>
+                        </Link>
+                        <Button
+                            style={{ marginLeft: "10px" }}
+                            type="primary"
+                            onClick={() => {userService.logout(); }}
+                        >
+                            <Link to={`/login`}>
+                                <span>Sign Out</span>
+                            </Link>
+                        </Button>
+                    </div>
+                }
+            </div>
+        </Header>
     );
 }
 

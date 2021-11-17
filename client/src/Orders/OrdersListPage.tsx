@@ -15,10 +15,11 @@ class Orders extends Component<unknown, OrdersState> {
     }
 
     async componentDidMount() {
-        const orders = (await axiosInstance.get(`/orders/allOrders`)).data;
-        this.setState({
-            orders,
-            credentials: userService.getCredentials(),
+        axiosInstance.get(`/orders/allOrders`).then((response) => {
+            this.setState({
+                orders: response.data,
+                credentials: userService.getCredentials(),
+            });
         });
     }
 

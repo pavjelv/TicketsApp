@@ -10,24 +10,28 @@ import MyOrders from './Orders/MyOrders'
 import {RegistrationForm} from "./Registration/RegistrationForm";
 import ProductsListPage from "./Products/ProductsListPage";
 import NewProduct from "./Products/NewProduct";
+import {Layout} from "antd";
+
+const {Content, Footer} = Layout;
 
 class App extends Component {
   render() {
     return (
-      <div>
+      <Layout style={{ height: '100vh' }}>
         <NavBar/>
-       
-        <PrivateRoute path='/myTickets' component={MyOrders}/>
-        <Route exact path='/' component={OrdersListPage}/>
-        <Route exact path='/order/:id' component={OrderDetailsPage}/>
-        <Route path="/login" component={LoginPage} />
-        <PrivateRoute path='/newProduct' component={NewProduct} />
-        <PrivateRoute path='/user/:id' component={UserPage}/>
-        <PrivateRoute path='/products' component={ProductsListPage}/>
-        <Route path="/register" component={RegistrationForm} />
-        {/* <Route exact path='/user' component={User}/> */}
-
-      </div>
+        <Content style={{ padding: '30px 50px 0px 50px' }}>
+            <PrivateRoute path='/myTickets' component={MyOrders}/>
+            <Route exact path='/' component={OrdersListPage}/>
+            <Route exact path='/order/:id' component={OrderDetailsPage}/>
+            <Route path="/login" component={LoginPage} />
+            <PrivateRoute path='/newProduct' component={NewProduct} />
+            <PrivateRoute path='/user/:id' component={UserPage}/>
+            <PrivateRoute path='/products' component={ProductsListPage}/>
+            <Route path="/register" component={RegistrationForm} />
+            {/* <Route exact path='/user' component={User}/> */}
+        </Content>
+        <Footer style={{ textAlign: 'center' }}>Together Cheaper ©2021</Footer>
+      </Layout>
     );
   }
 }
