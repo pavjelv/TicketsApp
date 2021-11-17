@@ -21,4 +21,8 @@ const OrderSchema = new Schema<OrderDao>({
 });
 
 
-export const Order = mongoose.model('Order', OrderSchema);
+export interface IOrderRepository {
+
+}
+
+export const OrderRepository = mongoose.model('Order', OrderSchema);

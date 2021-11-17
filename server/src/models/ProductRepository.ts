@@ -21,5 +21,9 @@ const ProductSchema = new Schema<ProductDao>({
     }
 });
 
-export const Product = mongoose.model('Product', ProductSchema);
+export interface IProductRepository {
+
+}
+
+export const ProductRepository = mongoose.model('Product', ProductSchema);
 
