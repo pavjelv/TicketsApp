@@ -7,7 +7,7 @@ import {IProductService, ProductService} from "../../controllers/product.service
 
 const productService: IProductService = new ProductService();
 
-router.get('/allProducts', auth.optional, productService.getAll)
+router.get('/allProducts', auth.required, productService.getAll)
 
 router.post('/addProduct', auth.required, productService.addProduct)
 

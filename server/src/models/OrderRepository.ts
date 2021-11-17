@@ -15,7 +15,7 @@ const OrderSchema = new Schema<OrderDao>({
         type: Schema.Types.ObjectId,
         ref: 'DetailedUser'
     },
-    isResolved: {
+    isSubmitted: {
         type: Boolean
     }
 });

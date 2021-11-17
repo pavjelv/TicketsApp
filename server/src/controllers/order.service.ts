@@ -10,13 +10,15 @@ export interface IOrderService {
     addParticipant: (req: Request, res: Response) => void;
     getAll: (_req: Request, res: Response, next: NextFunction) => void;
     getOrder: (req: Request, res: Response, next: NextFunction) => void;
+    submit: (req: Request, res: Response) => void;
 }
 
 export class OrderService implements IOrderService {
 
     addOrder(req: Request, res: Response): void {
         let order = ({
-            product: req.body.product
+            product: req.body.product,
+            isSubmitted: false
         })
 
         const finalOrder = new OrderRepository(order);
@@ -91,6 +93,46 @@ export class OrderService implements IOrderService {
                 next()
             })
     }
+
+    submit(req: Request, res: Response): void {
+        // @ts-ignore
+        const { payload: { id } } = req;
+        SecureUser.findById(id).then((user: SecureUserModel) => {
+            DetailedUser.find({"email" : user.email}).then((userProps: DetailedUserModel[]) => {
+                const orderId = req.body.orderId;
+                OrderRepository.findById(orderId)
+                    .populate('product')
+                    .exec((err: unknown, order: OrderModel)=> {
+                        if (err) {
+                            res.status(500).send();
+                            return;
+                        }
+                        if (userProps[0].role === "Worker") {
+                            if (order.participants?.length === order.product.participantsAmount) {
+                                OrderRepository.update({_id: orderId}, {$set: {"isSubmitted": true}}, null, function (err: unknown) {
+                                    if (err) {
+                                        res.status(500).send(err);
+                                    }
+                                    res.status(200).send()
+                                })
+                            } else {
+                                res.status(500).json({
+                                    errors: {
+                                        participantsAmount: 'Not enough participants!',
+                                    },
+                                });
+                            }
+                        } else {
+                            res.status(500).json({
+                               errors: {
+                                   isSubmitted: 'Operation is forbidden!',
+                               },
+                            });
+                        }
+                    })
+            });
+        });
+    }
 }
 
 export function assign (req: Request, res: Response, next: NextFunction) {
@@ -106,17 +148,8 @@ export function assign (req: Request, res: Response, next: NextFunction) {
     })
 }
 
-export function resolve (req: Request, res: Response, next: NextFunction) {
-    OrderRepository.updateOne({_id: req.body.orderId}, {$set:{"isResolved": "true"}}, null, function(err: unknown) {
-        if(err) {
-            return next(err)
-        }
-        res.status(200).send()
-    })
-}
-
 export function getAllUnresolved (_req: Request, res: Response, next: NextFunction) {
-    OrderRepository.find({"isResolved": false})
+    OrderRepository.find({"isSubmitted": false})
         .populate('reporter')
         .populate('assignee')
         .exec((err: unknown, orders: OrderModel[])=> {
@@ -132,7 +165,7 @@ export function getAllUnresolved (_req: Request, res: Response, next: NextFuncti
 }
 
 export function getMyUnresolvedOrders (req: Request, res: Response, next: NextFunction) {
-    OrderRepository.find({"isResolved": false})
+    OrderRepository.find({"isSubmitted": false})
         .populate('reporter')
         .populate('assignee')
         .exec((err: unknown, orders: OrderModel[])=> {

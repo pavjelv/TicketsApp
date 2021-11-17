@@ -7,7 +7,7 @@ export interface OrderModel {
     participants: DetailedUserModel[];
     reporter: any;
     product: ProductModel;
-    isResolved: boolean;
+    isSubmitted: boolean;
 }
 
 export interface OrdersState {
