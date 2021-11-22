@@ -1,9 +1,9 @@
 import React, {Component, ReactElement} from 'react';
-import axios from 'axios';
 import {OrderModel} from "@pavo/shared-services-shared/src";
-import {userService} from "../Services/UserService";
-import {api_url} from "../environment";
 import axiosInstance from "../Auth/AxiosInstance";
+import {Breadcrumb, Button, Descriptions, notification} from "antd";
+import {userService} from "../Services/UserService";
+import { HomeOutlined } from '@ant-design/icons';
 
 class OrderDetailsPage extends Component<any, {order: OrderModel}> {
     constructor(props: unknown) {
@@ -11,8 +11,6 @@ class OrderDetailsPage extends Component<any, {order: OrderModel}> {
         this.state = {
           order: null,
         };
-
-        this.submitAnswer = this.submitAnswer.bind(this);
       }
 
       async componentDidMount() {
@@ -28,54 +26,69 @@ class OrderDetailsPage extends Component<any, {order: OrderModel}> {
         });
       }
 
-      async submitAnswer(userAnswer: string) {
-        await axios.post(`${api_url}/tickets/answer`, {
-          ticketId : this.state.order._id,
-          answer: userAnswer, 
-        }, {
-          headers: { 'Authorization':  userService.getCredentials().token}
-        });
-
-        await this.refreshOrder();
-      }
-
       participate(): void {
         axiosInstance.put("/orders/addParticipant", {
           orderId : this.state.order._id,
         }).then(() => {
-          return this.refreshOrder()
-        });
+          this.successNotification('You have successfully participated!');
+          this.refreshOrder();
+        }, () => this.errorNotification());
       }
 
-      async resolve() {
-        await axios.post(`${api_url}/tickets/resolve`, {
-          ticketId : this.state.order._id,
-        }, {
-          headers: { 'Authorization':  userService.getCredentials().token}
-        });
-
-        await this.refreshOrder();
+      leave(): void {
+        axiosInstance.put("/orders/removeParticipant", {
+          orderId : this.state.order._id,
+        }).then(() => {
+          this.successNotification('You have left!');
+          this.refreshOrder();
+        }, () => this.errorNotification());
       }
+
+      successNotification(message: string): void {
+        notification["success"]({
+          message,
+        });
+      };
+
+      errorNotification() {
+        notification["error"]({
+          message: 'Something went wrong!',
+        });
+      };
 
       render(): ReactElement {
           const {order} = this.state;
           if(order === null) return <p>Loading ...</p>;
           return (
-            <div className="container">
-            <div className="row">
-              <div className="jumbotron col-12">
-                <h1 className="display-3">{order.product.title}</h1>
-                <p className="lead">{order.product.description}</p>
-                <p className="lead">{order.product.price}</p>
-                <hr className="my-4" />
-                { userService.isAuthenticated() &&
-                  <p className="lead">
-                      <button type="button" className="btn btn-success" onClick={() => {this.participate()}}>Participate</button>
-                  </p>
-                }
-              </div>
-            </div>   
-          </div>
+              <><Breadcrumb style={{paddingBottom: "10px"}}>
+                <Breadcrumb.Item href="/">
+                  <HomeOutlined/>
+                </Breadcrumb.Item>
+                <Breadcrumb.Item>{order.product.title}</Breadcrumb.Item>
+              </Breadcrumb><Descriptions
+                  style={{maxWidth: "50vw"}}
+                  contentStyle={{border: "1px solid #d3d3d3"}}
+                  labelStyle={{border: "1px solid #d3d3d3"}}
+                  bordered
+                  title={order.product.title}
+                  size={"default"}
+                  column={1}
+                  extra={!order.participants.find((p) => p._id === userService.getCredentials().id)
+                      ? <Button type="primary" onClick={() => {
+                        this.participate();
+                      }}>Participate</Button>
+                      : <Button type="primary" danger onClick={() => {
+                        this.leave();
+                      }}>Leave</Button>}
+              >
+                <Descriptions.Item label="Description">{order.product.description}</Descriptions.Item>
+                <Descriptions.Item label="Price">{order.product.price}</Descriptions.Item>
+                <Descriptions.Item
+                    label="Required number of participants">{order.product.participantsAmount}</Descriptions.Item>
+                <Descriptions.Item label="Participants">{order.participants?.map((participant) => (
+                    <p key={participant._id}>{participant.firstName + " " + participant.lastName}</p>
+                ))}</Descriptions.Item>
+              </Descriptions></>
           )
       }
 

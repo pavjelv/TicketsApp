@@ -1,12 +1,12 @@
 import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import {Route, Redirect} from 'react-router-dom';
 import {userService} from "../Services/UserService";
 
-// @ts-ignore
-export const PrivateRoute = ({ component: Component, ...rest }) => (
-    <Route {...rest} render={props => (
+export const PrivateRoute = ({component, isAuthenticated, ...rest}: any) => {
+    const routeComponent = (props: any) => (
         userService.isAuthenticated()
-            ? <Component {...props} />
-            : <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
-    )} />
-)
+            ? React.createElement(component, props)
+            : <Redirect to={{pathname: '/login'}}/>
+    );
+    return <Route {...rest} render={routeComponent}/>;
+};

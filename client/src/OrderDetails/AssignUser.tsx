@@ -1,6 +1,5 @@
 import React, {Component, Fragment} from 'react';
 import axios from 'axios';
-import {withRouter} from 'react-router-dom';
 import {userService} from "../Services/UserService";
 import {CredentialsModel} from "@pavo/shared-services-shared/src";
 import {api_url} from "../environment";
@@ -75,4 +74,4 @@ class AssignUser extends Component<any, AssignUserState> {
   }
 }
 
-export default withRouter(AssignUser);
+export default AssignUser;

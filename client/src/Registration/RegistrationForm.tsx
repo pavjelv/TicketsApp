@@ -45,52 +45,65 @@ export class RegistrationForm extends React.Component<any, RegistrationPageModel
 
     render(): ReactElement {
         return (
-            <Form {...layout} ref={this.formRef} name="control-ref" className="login-form" onFinish={this.handleSubmit}>
-                <Form.Item name="email" label="E-mail" rules={[
-                    {
-                        type: 'email',
-                        message: 'The input is not valid E-mail!',
-                    },
-                    {
-                        required: true,
-                        message: "Please, input your E-mail!"
-                    }]}>
-                    <Input />
-                </Form.Item>
-                <Form.Item name="firstName" label="First Name" rules={[
-                    {
-                        required: true,
-                        message: "Please, input your First Name!"
-                    }]}>
-                    <Input />
-                </Form.Item>
-                <Form.Item name="lastName" label="Last Name" rules={[
-                    {
-                        required: true,
-                        message: "Please, input your Last Name!"
-                    }]}>
-                    <Input />
-                </Form.Item>
-                <Form.Item name="phone" label="Phone" rules={[
-                    {
-                        required: true,
-                        message: "Please, input your phone!"
-                    }]}>
-                    <InputNumber />
-                </Form.Item>
-                <Form.Item name="password" label="Password" rules={[
-                    {
-                        required: true,
-                        message: "Please, input your password!"
-                    }]}>
-                    <Input.Password />
-                </Form.Item>
-                <Form.Item {...tailLayout}>
-                    <Button type="primary" htmlType="submit">
-                        Submit
-                    </Button>
-                </Form.Item>
-            </Form>
+            <div style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
+                <h2 style={{paddingBottom: "15px"}}>Register</h2>
+                <Form {...layout}
+                      ref={this.formRef}
+                      name="control-ref"
+                      className="login-form"
+                      style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          width: "40%",
+                          paddingRight: "10%"
+                      }}
+                      onFinish={this.handleSubmit}>
+                    <Form.Item name="email" label="E-mail" rules={[
+                        {
+                            type: 'email',
+                            message: 'The input is not valid E-mail!',
+                        },
+                        {
+                            required: true,
+                            message: "Please, input your E-mail!"
+                        }]}>
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="firstName" label="First Name" rules={[
+                        {
+                            required: true,
+                            message: "Please, input your First Name!"
+                        }]}>
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="lastName" label="Last Name" rules={[
+                        {
+                            required: true,
+                            message: "Please, input your Last Name!"
+                        }]}>
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="phone" label="Phone" rules={[
+                        {
+                            required: true,
+                            message: "Please, input your phone!"
+                        }]}>
+                        <InputNumber style={{width: "100%"}} />
+                    </Form.Item>
+                    <Form.Item name="password" label="Password" rules={[
+                        {
+                            required: true,
+                            message: "Please, input your password!"
+                        }]}>
+                        <Input.Password />
+                    </Form.Item>
+                    <Form.Item {...tailLayout}>
+                        <Button type="primary" htmlType="submit">
+                            Submit
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </div>
         );
     }
 }

@@ -1,8 +1,8 @@
 import React, {ReactElement} from 'react';
 import {userService} from '../Services/UserService';
 import {LoginPageState} from "@pavo/shared-services-shared/src";
-import {withRouter} from "react-router-dom";
 import {Button, Form, FormInstance, Input} from "antd";
+import {withRouter} from "react-router-dom";
 
 const layout = {
     labelCol: { span: 8 },
@@ -50,31 +50,44 @@ class LoginPage extends React.Component<any, LoginPageState> {
     
     render(): ReactElement {
         return (
-            <Form {...layout} ref={this.formRef} name="control-ref" className="login-form" onFinish={this.handleSubmit}>
-                <Form.Item name="email" label="E-mail" rules={[
-                    {
-                        type: 'email',
-                        message: 'The input is not valid E-mail!',
-                    },
-                    {
-                        required: true,
-                        message: "Please, input your E-mail!"
-                    }]}>
-                    <Input />
-                </Form.Item>
-                <Form.Item name="password" label="Password" rules={[
-                    {
-                        required: true,
-                        message: "Please, input your password!"
-                    }]}>
-                    <Input.Password />
-                </Form.Item>
-                <Form.Item {...tailLayout}>
-                    <Button type="primary" htmlType="submit">
-                        Submit
-                    </Button>
-                </Form.Item>
-            </Form>
+            <div style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
+                <h2 style={{paddingBottom: "15px"}}>Login</h2>
+                    <Form {...layout}
+                          ref={this.formRef}
+                          name="control-ref"
+                          className="login-form"
+                          style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              width: "40%",
+                              paddingRight: "10%"
+                          }}
+                          onFinish={this.handleSubmit}>
+                    <Form.Item name="email" label="E-mail" rules={[
+                        {
+                            type: 'email',
+                            message: 'The input is not valid E-mail!',
+                        },
+                        {
+                            required: true,
+                            message: "Please, input your E-mail!"
+                        }]}>
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="password" label="Password" rules={[
+                        {
+                            required: true,
+                            message: "Please, input your password!"
+                        }]}>
+                        <Input.Password />
+                    </Form.Item>
+                    <Form.Item {...tailLayout}>
+                        <Button type="primary" htmlType="submit">
+                            Submit
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </div>
             );
         }
     }

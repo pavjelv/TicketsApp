@@ -18,7 +18,3 @@ code {
   display: flex;
   justify-content: space-between;
 }
-
-.login-form {
-  max-width: 600px;
-}

@@ -17,9 +17,9 @@ const {Content, Footer} = Layout;
 class App extends Component {
   render() {
     return (
-      <Layout style={{ height: '100vh' }}>
+      <Layout style={{ minHeight: '100vh' }}>
         <NavBar/>
-        <Content style={{ padding: '30px 50px 0px 50px' }}>
+        <Content style={{ padding: '30px 50px 0px 50px', overflow: "auto" }}>
             <PrivateRoute path='/myTickets' component={MyOrders}/>
             <Route exact path='/' component={OrdersListPage}/>
             <Route exact path='/order/:id' component={OrderDetailsPage}/>

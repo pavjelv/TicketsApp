@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import {withRouter} from 'react-router-dom';
 import axiosInstance from "../Auth/AxiosInstance";
+import {Button, Form, FormInstance, Input, InputNumber} from "antd";
+import {withRouter} from "react-router-dom";
 
 interface NewProductState {
     disabled: boolean;
@@ -10,7 +11,17 @@ interface NewProductState {
     participantsAmount: number;
 }
 
+const layout = {
+    labelCol: { span: 8 },
+    wrapperCol: { span: 16 },
+};
+const tailLayout = {
+    wrapperCol: { offset: 8, span: 16 },
+};
+
 class NewProduct extends Component<any, NewProductState> {
+    formRef = React.createRef<FormInstance>();
+
     constructor(props: unknown) {
         super(props);
 
@@ -21,105 +32,66 @@ class NewProduct extends Component<any, NewProductState> {
             price: 0,
             participantsAmount: 0,
         };
-    }
-    updateDescription(value: string) {
-        this.setState({
-          description: value,
-        });
-      }
 
-    updatePrice(value: string) {
-        this.setState({
-            price: parseInt(value),
-        });
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    updateAmount(value: string) {
-        this.setState({
-            participantsAmount: parseInt(value),
-        });
-    }
-
-    updateTitle(value: string) {
-        this.setState({
-          title: value,
-        });
-      }
-    
-      async submit() {
+    handleSubmit(e: NewProductState): void {
         this.setState({
           disabled: true,
         });
 
-        await axiosInstance.post(`/products/addProduct`,{
-            title: this.state.title,
-            description: this.state.description,
-            price: this.state.price,
-            participantsAmount: this.state.participantsAmount,
-          });
-
-        this.props.history.push('/products');
+        axiosInstance.post(`/products/addProduct`,e).then((_result) => {
+            this.props.history.push('/products');
+        });
     }
 
     render() {
         return (
-          <div className="container">
-            <div className="row">
-              <div className="col-12">
-                <div className="card border-primary">
-                  <div className="card-header">New Product</div>
-                  <div className="card-body text-left">
-                    <div className="form-group">
-                      <label>Title:</label>
-                      <input
-                        disabled={this.state.disabled}
-                        type="text"
-                        onBlur={(e) => {this.updateTitle(e.target.value)}}
-                        className="form-control"
-                        placeholder="Give your product a title."
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>Description:</label>
-                      <input
-                        disabled={this.state.disabled}
-                        type="text"
-                        onBlur={(e) => {this.updateDescription(e.target.value)}}
-                        className="form-control"
-                        placeholder="Give more context to your product."
-                      />
-                    </div>
-                      <div className="form-group">
-                          <label>Price:</label>
-                          <input
-                              disabled={this.state.disabled}
-                              type="number"
-                              onBlur={(e) => {this.updatePrice(e.target.value)}}
-                              className="form-control"
-                              placeholder="Price."
-                          />
-                      </div>
-                      <div className="form-group">
-                          <label>Participants Amount:</label>
-                          <input
-                              disabled={this.state.disabled}
-                              type="number"
-                              onBlur={(e) => {this.updateAmount(e.target.value)}}
-                              className="form-control"
-                              placeholder="Amount."
-                          />
-                      </div>
-                    <button
-                      disabled={this.state.disabled}
-                      className="btn btn-primary"
-                      onClick={() => {this.submit()}}>
-                      Submit
-                    </button>
-                  </div>
-                </div>
-              </div>
+            <div style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
+                <h2 style={{paddingBottom: "15px"}}>New Product</h2>
+                <Form {...layout}
+                      ref={this.formRef}
+                      name="control-ref"
+                      className="login-form"
+                      style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          width: "50%",
+                          paddingRight: "12%"
+                      }}
+                      onFinish={this.handleSubmit}>
+                    <Form.Item name="title" label="Title" rules={[
+                        {
+                            required: true,
+                            message: "Please, input title!"
+                        }]}>
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="description" label="Description">
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="price" label="Price" rules={[
+                        {
+                            required: true,
+                            message: "Please, input price!"
+                        }]}>
+                        <InputNumber style={{width: "100%"}} />
+                    </Form.Item>
+                    <Form.Item name="participantsAmount" label="Participants Amount" rules={[
+                        {
+                            required: true,
+                            message: "Please, input Participants Amount!"
+                        }]}>
+                        <InputNumber style={{width: "100%"}} />
+                    </Form.Item>
+                    <Form.Item {...tailLayout}>
+                        <Button type="primary" htmlType="submit">
+                            Submit
+                        </Button>
+                    </Form.Item>
+                </Form>
             </div>
-          </div>
         )
       }
 }
