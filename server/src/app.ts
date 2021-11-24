@@ -1,4 +1,4 @@
-import express from "express";
+import {express, Request, Response} from "express";
 import morgan from "morgan";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
@@ -12,6 +12,7 @@ import {addLocalStrategy} from "./config/passport";
 
 mongoose.Promise = global.Promise;
 const app = express()
+const multer  = require("multer");
 const url = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017"
 
 app.use(cors());
@@ -56,9 +57,21 @@ let port = 5000 || process.env.PORT
 // app.use(express.static(path.join(__dirname, 'public')));
 // app.use(session({secret: 'my-secret-word', cookie: {maxAge: 60000}, resave:false, saveUninitialized: false}));
 
-//app.use('/static',express.static(path.join(__dirname,'static')))
+app.use('/static', express.static(path.join(__dirname, 'uploads')))
 
 //app.use('/', router) /////////////
+
+app.use(multer({ dest: "uploads" }).single());
+
+app.post("/upload", function (req: Request, res: Response) {
+    let fileData = req.file;
+    console.log(fileData);
+    if(!fileData)
+        res.send("Error while loading file!");
+    else
+        res.send("File has been loaded!");
+});
+
 
 /** start server */
 app.listen(port, () => {
