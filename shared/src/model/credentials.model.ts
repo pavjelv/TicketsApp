@@ -4,5 +4,5 @@ export interface CredentialsModel {
     firstName: string;
     token: string;
     role: UserRole;
-    id: string;
+    _id: string;
 }

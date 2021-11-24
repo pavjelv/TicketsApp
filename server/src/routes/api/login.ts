@@ -43,7 +43,7 @@ router.post('/', auth.optional, (req: Request, res: Response, next: NextFunction
                     firstName : userDetails[0].firstName,
                     token : "Token=" + user.token,
                     role: userDetails[0].role,
-                    id : userDetails[0]._id
+                    _id : userDetails[0]._id
                 }
                 console.log(credentials)
                 //user.email = userDetails.firstName;

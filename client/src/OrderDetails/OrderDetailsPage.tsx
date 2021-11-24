@@ -73,7 +73,7 @@ class OrderDetailsPage extends Component<any, {order: OrderModel}> {
                   title={order.product.title}
                   size={"default"}
                   column={1}
-                  extra={!order.participants.find((p) => p._id === userService.getCredentials().id)
+                  extra={!order.participants.find((p) => p._id === userService.getCredentials()._id)
                       ? <Button type="primary" onClick={() => {
                         this.participate();
                       }}>Participate</Button>

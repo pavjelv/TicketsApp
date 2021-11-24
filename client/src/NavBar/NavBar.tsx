@@ -43,7 +43,7 @@ function NavBar(): ReactElement {
                 }
                 { userService.isAuthenticated() &&
                     <div>
-                        <Link to={`/user/${userService.getCredentials().id}`}>
+                        <Link to={`/user/${userService.getCredentials()._id}`}>
                             <span>{userService.getCredentials().firstName}</span>
                         </Link>
                         <Button
