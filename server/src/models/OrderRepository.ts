@@ -11,10 +11,6 @@ const OrderSchema = new Schema<OrderDao>({
       type: Schema.Types.ObjectId,
       ref: "DetailedUser"
     }],
-    reporter: {
-        type: Schema.Types.ObjectId,
-        ref: 'DetailedUser'
-    },
     isSubmitted: {
         type: Boolean
     }

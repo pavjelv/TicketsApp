@@ -59,7 +59,6 @@ export function createUser (req: Request, res: Response, _next: NextFunction) {
             const user = new DetailedUser(
                 {
                     firstName: req.body.firstName,
-                    middleName: req.body.middleName,
                     lastName: req.body.lastName,
                     phone: req.body.phone,
                     token: "STDAFX.H",

@@ -5,7 +5,6 @@ import {DetailedUserModel} from "./user-details.model";
 export interface OrderModel {
     _id: string;
     participants: DetailedUserModel[];
-    reporter: any;
     product: ProductModel;
     isSubmitted: boolean;
 }

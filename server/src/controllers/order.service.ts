@@ -141,7 +141,7 @@ export class OrderService implements IOrderService {
                             res.status(500).send();
                             return;
                         }
-                        if (userProps[0].role === "Worker") {
+                        if (userProps[0].role === "Admin") {
                             if (order.participants?.length === order.product.participantsAmount) {
                                 OrderRepository.update({_id: orderId}, {$set: {"isSubmitted": true}}, null, function (err: unknown) {
                                     if (err) {
@@ -169,65 +169,4 @@ export class OrderService implements IOrderService {
     }
 }
 
-export function assign (req: Request, res: Response, next: NextFunction) {
-    OrderRepository.updateOne(
-        {_id: req.body.orderId},
-        {$set:{"assignee": req.body.id}},
-        null,
-        function(err: unknown) {
-        if (err) {
-            return next(err)
-        }
-        res.status(200).send()
-    })
-}
 
-export function getAllUnresolved (_req: Request, res: Response, next: NextFunction) {
-    OrderRepository.find({"isSubmitted": false})
-        .populate('reporter')
-        .populate('assignee')
-        .exec((err: unknown, orders: OrderModel[])=> {
-        if (err) {
-            res.send(err);
-        } else if (!orders) {
-            res.status(404).send();
-        } else {
-            res.send(orders);
-        }
-        next();
-    })
-}
-
-export function getMyUnresolvedOrders (req: Request, res: Response, next: NextFunction) {
-    OrderRepository.find({"isSubmitted": false})
-        .populate('reporter')
-        .populate('assignee')
-        .exec((err: unknown, orders: OrderModel[])=> {
-        if (err) {
-            res.send(err);
-        } else if (!orders) {
-            res.status(404).send();
-        } else {
-            res.send(orders.filter((t) => t.reporter._id === req.body.id));
-            next();
-        }
-    })
-}
-
-export function getMyOrders (req: Request, res: Response, next: NextFunction) {
-    OrderRepository.find({})
-        .populate('reporter')
-        .populate('assignee')
-        .exec((err: unknown, orders: OrderModel[]) => {
-            if(err) {
-                res.send(err)
-            }
-            else if (!orders) {
-                res.status(404).send()
-            }
-            else {
-                res.send(orders.filter((t) => t.reporter._id === req.body.id));
-            }
-            next();
-        });
-}
