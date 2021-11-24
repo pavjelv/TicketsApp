@@ -4,6 +4,7 @@ import axiosInstance from "../Auth/AxiosInstance";
 import {Breadcrumb, Button, Descriptions, notification} from "antd";
 import {userService} from "../Services/UserService";
 import { HomeOutlined } from '@ant-design/icons';
+import {Link} from "react-router-dom";
 
 class OrderDetailsPage extends Component<any, {order: OrderModel}> {
     constructor(props: unknown) {
@@ -35,6 +36,15 @@ class OrderDetailsPage extends Component<any, {order: OrderModel}> {
         }, () => this.errorNotification());
       }
 
+    submit(): void {
+        axiosInstance.put("/orders/submit", {
+            orderId : this.state.order._id,
+        }).then(() => {
+            this.successNotification('You have successfully submitted the order!');
+            this.refreshOrder();
+        }, () => this.errorNotification());
+    }
+
       leave(): void {
         axiosInstance.put("/orders/removeParticipant", {
           orderId : this.state.order._id,
@@ -61,8 +71,10 @@ class OrderDetailsPage extends Component<any, {order: OrderModel}> {
           if(order === null) return <p>Loading ...</p>;
           return (
               <><Breadcrumb style={{paddingBottom: "10px"}}>
-                <Breadcrumb.Item href="/">
-                  <HomeOutlined/>
+                <Breadcrumb.Item>
+                    <Link to='/'>
+                        <HomeOutlined/>
+                    </Link>
                 </Breadcrumb.Item>
                 <Breadcrumb.Item>{order.product.title}</Breadcrumb.Item>
               </Breadcrumb><Descriptions
@@ -73,13 +85,21 @@ class OrderDetailsPage extends Component<any, {order: OrderModel}> {
                   title={order.product.title}
                   size={"default"}
                   column={1}
-                  extra={!order.participants.find((p) => p._id === userService.getCredentials()._id)
-                      ? <Button type="primary" onClick={() => {
+                  extra={!order.isSubmitted && [!order.participants.find((p) => p._id === userService.getCredentials()._id)
+                      ? <Button key={1} type="primary" onClick={() => {
                         this.participate();
                       }}>Participate</Button>
-                      : <Button type="primary" danger onClick={() => {
+                      : <Button key={2} type="primary" danger onClick={() => {
                         this.leave();
-                      }}>Leave</Button>}
+                      }}>Leave</Button>,
+                      (order.participants.length === order.product.participantsAmount) &&
+                          <Button key={3}
+                                  type="primary"
+                                  style={{marginLeft: "10px"}}
+                                  onClick={() => {
+                              this.submit();
+                          }}>Submit</Button>
+                  ]}
               >
                 <Descriptions.Item label="Description">{order.product.description}</Descriptions.Item>
                 <Descriptions.Item label="Price">{order.product.price}</Descriptions.Item>

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import axiosInstance from "../Auth/AxiosInstance";
-import {Button, Form, FormInstance, Input, InputNumber} from "antd";
+import {Button, Form, FormInstance, Input, InputNumber, Upload} from "antd";
+import { InboxOutlined } from '@ant-design/icons';
 import {withRouter} from "react-router-dom";
 
 interface NewProductState {
@@ -35,6 +36,40 @@ class NewProduct extends Component<any, NewProductState> {
 
         this.handleSubmit = this.handleSubmit.bind(this);
     }
+
+    normFile(e: any): any {
+        console.log('Upload event:', e);
+        if (Array.isArray(e)) {
+            return e;
+        }
+        return e && e.fileList;
+    };
+
+    uploadImage(options: any): void {
+        const {onSuccess, onError, file, onProgress} = options;
+
+        const fmData = new FormData();
+        const config = {
+            headers: {"content-type": "multipart/form-data"},
+            onUploadProgress: (event: { loaded: number; total: number; }) => {
+                onProgress({percent: (event.loaded / event.total) * 100});
+            }
+        };
+        fmData.append("file", file);
+        try {
+            axiosInstance.post(
+                "/upload/img",
+                fmData,
+                config
+            ).then((_response) => {
+                onSuccess("Ok");
+            }, (error) => {
+                onError({error});
+            });
+        } catch (err) {
+            onError({err});
+        }
+    };
 
     handleSubmit(e: NewProductState): void {
         this.setState({
@@ -84,6 +119,21 @@ class NewProduct extends Component<any, NewProductState> {
                             message: "Please, input Participants Amount!"
                         }]}>
                         <InputNumber style={{width: "100%"}} />
+                    </Form.Item>
+                    <Form.Item label="Image">
+                        <Form.Item name="image" valuePropName="fileList" getValueFromEvent={this.normFile} noStyle>
+                            <Upload.Dragger name="files"
+                                            accept={".img,.jpg,.png"}
+                                            multiple={false}
+                                            listType={"picture-card"}
+                                            customRequest={this.uploadImage}
+                            >
+                                <p className="ant-upload-drag-icon">
+                                    <InboxOutlined />
+                                </p>
+                                <p className="ant-upload-text">Click or drag file to this area to upload</p>
+                            </Upload.Dragger>
+                        </Form.Item>
                     </Form.Item>
                     <Form.Item {...tailLayout}>
                         <Button type="primary" htmlType="submit">
