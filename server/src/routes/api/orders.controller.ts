@@ -17,6 +17,8 @@ router.get('/allOrders', auth.optional, orderService.getAll)
 
 router.get('/getOrder/:id', auth.optional, orderService.getOrder)
 
+router.get('/getMyOrders', auth.required, orderService.getMyOrders)
+
 router.put('/submit', auth.required, orderService.submit)
 
 module.exports = router;

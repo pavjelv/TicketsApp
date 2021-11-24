@@ -11,6 +11,7 @@ export interface IOrderService {
     removeParticipant: (req: Request, res: Response) => void;
     getAll: (_req: Request, res: Response, next: NextFunction) => void;
     getOrder: (req: Request, res: Response, next: NextFunction) => void;
+    getMyOrders: (req: Request, res: Response) => void;
     submit: (req: Request, res: Response) => void;
 }
 
@@ -128,6 +129,28 @@ export class OrderService implements IOrderService {
             })
     }
 
+    getMyOrders(req: Request, res: Response): void {
+        // @ts-ignore
+        const { payload: { id } } = req;
+        SecureUser.findById(id).then((user: SecureUserModel) => {
+            DetailedUser.find({"email" : user.email}).then((userProps: DetailedUserModel[]) => {
+                OrderRepository.findById({})
+                    .exec((err: unknown, orders: OrderModel[]) => {
+                        if (err) {
+                            res.send(err);
+                        } else if (!orders) {
+                            res.status(404).send();
+                        } else {
+                            res.send(orders.filter((o) => o.participants.map(p => p._id).includes(userProps[0]._id)));
+                            res.status(200).send();
+                        }
+                    });
+            });
+        });
+    }
+
+
+
     submit(req: Request, res: Response): void {
         // @ts-ignore
         const { payload: { id } } = req;
@@ -141,26 +164,34 @@ export class OrderService implements IOrderService {
                             res.status(500).send();
                             return;
                         }
-                        if (userProps[0].role === "Admin") {
-                            if (order.participants?.length === order.product.participantsAmount) {
-                                OrderRepository.update({_id: orderId}, {$set: {"isSubmitted": true}}, null, function (err: unknown) {
-                                    if (err) {
-                                        res.status(500).send(err);
-                                    }
-                                    res.status(200).send()
-                                })
+                        if (!order.isSubmitted) {
+                            if (userProps[0].role === "Admin") {
+                                if (order.participants?.length === order.product.participantsAmount) {
+                                    OrderRepository.updateOne({_id: orderId}, {$set: {"isSubmitted": true}}, null, function (err: unknown) {
+                                        if (err) {
+                                            res.status(500).send(err);
+                                        }
+                                        res.status(200).send()
+                                    })
+                                } else {
+                                    res.status(500).json({
+                                        errors: {
+                                            participantsAmount: 'Not enough participants!',
+                                        },
+                                    });
+                                }
                             } else {
                                 res.status(500).json({
                                     errors: {
-                                        participantsAmount: 'Not enough participants!',
+                                        isSubmitted: 'Operation is forbidden!',
                                     },
                                 });
                             }
                         } else {
                             res.status(500).json({
-                               errors: {
-                                   isSubmitted: 'Operation is forbidden!',
-                               },
+                                errors: {
+                                    isSubmitted: 'Submit operation is forbidden!',
+                                },
                             });
                         }
                     })
