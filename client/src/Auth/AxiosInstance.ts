@@ -3,7 +3,7 @@ import {api_url} from "../environment";
 import {userService} from "../Services/UserService";
 
 const axiosInstance = axios.create({
-    baseURL: api_url,
+    baseURL: `${api_url}/api`,
     headers: {
         "content-type": "application/json"
     },

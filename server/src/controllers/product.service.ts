@@ -27,7 +27,8 @@ export class ProductService implements IProductService {
             title: req.body.title,
             description: req.body.description,
             price: req.body.price,
-            participantsAmount: req.body.participantsAmount
+            participantsAmount: req.body.participantsAmount,
+            fileName: req.body.fileName,
         })
 
         if (!product.title) {

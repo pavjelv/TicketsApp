@@ -18,6 +18,9 @@ const ProductSchema = new Schema<ProductDao>({
     participantsAmount: {
         type: Number,
         required: true
+    },
+    fileName: {
+        type: String,
     }
 });
 

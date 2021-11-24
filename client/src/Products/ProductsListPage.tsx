@@ -4,6 +4,7 @@ import {userService} from "../Services/UserService";
 import {ProductModel, ProductsState} from "@pavo/shared-services-shared/src";
 import axiosInstance from "../Auth/AxiosInstance";
 import {Button, Card, Col, notification, Row} from "antd";
+import {api_url} from "../environment";
 
 class ProductsListPage extends Component<any, ProductsState> {
     constructor(props: unknown) {
@@ -65,6 +66,14 @@ class ProductsListPage extends Component<any, ProductsState> {
                                 <Card
                                     title={product.title}
                                     style={{ width: 300 }}
+                                    cover={
+                                        product.fileName &&
+                                        <img
+                                            style={{maxWidth: "100%", maxHeight: "100%", padding: "10px"}}
+                                            alt=""
+                                            src={`${api_url}/static/${product.fileName}`}
+                                        />
+                                    }
                                     actions={[
                                         <Button
                                             type={"primary"}
