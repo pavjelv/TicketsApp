@@ -8,6 +8,7 @@ function NavBar(): ReactElement {
     return (
         <Header className="main-header">
             <Menu
+                style={{minWidth: "20vw"}}
                 theme="dark"
                 mode="horizontal">
                 <Menu.Item
