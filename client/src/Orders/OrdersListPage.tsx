@@ -4,6 +4,7 @@ import {userService} from "../Services/UserService";
 import {OrdersState} from "@pavo/shared-services-shared/src";
 import axiosInstance from "../Auth/AxiosInstance";
 import {Card, Col, Row} from "antd";
+import {api_url} from "../environment";
 
 class Orders extends Component<unknown, OrdersState> {
     constructor(props: unknown) {
@@ -37,6 +38,14 @@ class Orders extends Component<unknown, OrdersState> {
                         >
                             <Card title={order.product?.title}
                                   extra={<Link to={`/order/${order._id}`}>More</Link>}
+                                  cover={
+                                      order.product?.fileName &&
+                                      <img
+                                          style={{maxWidth: "100%", maxHeight: "100%", padding: "10px"}}
+                                          alt=""
+                                          src={`${api_url}/static/${order.product?.fileName}`}
+                                      />
+                                  }
                                   style={{ width: 300 }}>
                                 <p>{order.product?.description}</p>
                                 <b>Price: {order.product?.price}</b>

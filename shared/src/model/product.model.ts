@@ -6,6 +6,7 @@ export interface ProductModel {
     description: string;
     price: number;
     participantsAmount: number;
+    fileName?: string;
 }
 
 export interface ProductsState {

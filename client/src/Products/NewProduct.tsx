@@ -10,6 +10,7 @@ interface NewProductState {
     description: string;
     price: number;
     participantsAmount: number;
+    fileName: string;
 }
 
 const layout = {
@@ -32,9 +33,11 @@ class NewProduct extends Component<any, NewProductState> {
             description: '',
             price: 0,
             participantsAmount: 0,
+            fileName: "",
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.uploadImage = this.uploadImage.bind(this);
     }
 
     normFile(e: any): any {
@@ -61,7 +64,8 @@ class NewProduct extends Component<any, NewProductState> {
                 "/upload/img",
                 fmData,
                 config
-            ).then((_response) => {
+            ).then((response) => {
+                this.setState({fileName: response.data.fileName});
                 onSuccess("Ok");
             }, (error) => {
                 onError({error});
@@ -75,8 +79,8 @@ class NewProduct extends Component<any, NewProductState> {
         this.setState({
           disabled: true,
         });
-
-        axiosInstance.post(`/products/addProduct`,e).then((_result) => {
+        const request = {...this.state, ...e};
+        axiosInstance.post(`/products/addProduct`, request).then((_result) => {
             this.props.history.push('/products');
         });
     }
@@ -123,7 +127,7 @@ class NewProduct extends Component<any, NewProductState> {
                     <Form.Item label="Image">
                         <Form.Item name="image" valuePropName="fileList" getValueFromEvent={this.normFile} noStyle>
                             <Upload.Dragger name="files"
-                                            accept={".img,.jpg,.png"}
+                                            accept={".img,.jpg,.png,.jpeg"}
                                             multiple={false}
                                             listType={"picture-card"}
                                             customRequest={this.uploadImage}

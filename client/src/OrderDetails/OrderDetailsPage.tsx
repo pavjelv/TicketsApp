@@ -1,10 +1,11 @@
 import React, {Component, ReactElement} from 'react';
 import {OrderModel} from "@pavo/shared-services-shared/src";
 import axiosInstance from "../Auth/AxiosInstance";
-import {Breadcrumb, Button, Descriptions, notification} from "antd";
+import {Breadcrumb, Button, Carousel, Descriptions, notification} from "antd";
 import {userService} from "../Services/UserService";
 import { HomeOutlined } from '@ant-design/icons';
 import {Link} from "react-router-dom";
+import {api_url} from "../environment";
 
 class OrderDetailsPage extends Component<any, {order: OrderModel}> {
     constructor(props: unknown) {
@@ -77,7 +78,19 @@ class OrderDetailsPage extends Component<any, {order: OrderModel}> {
                     </Link>
                 </Breadcrumb.Item>
                 <Breadcrumb.Item>{order.product.title}</Breadcrumb.Item>
-              </Breadcrumb><Descriptions
+              </Breadcrumb>
+                  {order.product?.fileName &&
+                      <Carousel>
+                          <div>
+                              <img
+                                  style={{maxWidth: "100%", maxHeight: "100%"}}
+                                  alt=""
+                                  src={`${api_url}/static/${order.product?.fileName}`}
+                              />
+                          </div>
+                      </Carousel>
+                  }
+                  <Descriptions
                   style={{maxWidth: "50vw"}}
                   contentStyle={{border: "1px solid #d3d3d3"}}
                   labelStyle={{border: "1px solid #d3d3d3"}}

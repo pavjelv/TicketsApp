@@ -56,7 +56,7 @@ let port = 5000 || process.env.PORT
 // app.use(express.static(path.join(__dirname, 'public')));
 // app.use(session({secret: 'my-secret-word', cookie: {maxAge: 60000}, resave:false, saveUninitialized: false}));
 
-app.use('/static', express.static(path.join(__dirname, 'uploads')))
+app.use('/static', express.static('uploads'))
 
 //app.use('/', router) /////////////
 
