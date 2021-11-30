@@ -1,5 +1,5 @@
 import {NextFunction, Request, Response} from "express";
-import {ProductRepository} from "../models/ProductRepository";
+import {ProductRepository} from "../repository/product.repository";
 import {ProductModel} from "@pavo/shared-services-shared/src";
 
 export interface IProductService {
@@ -7,7 +7,7 @@ export interface IProductService {
     getAll: (_req: Request, res: Response, next: NextFunction) => void;
 }
 
-export class ProductService implements IProductService {
+export class ProductService {
 
     getAll(_req: Request, res: Response, next: NextFunction): void {
         ProductRepository.find({})

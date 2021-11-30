@@ -2,8 +2,8 @@ import express from "express";
 
 const router = express.Router();
 
-import {auth} from "../auth";
-import {IProductService, ProductService} from "../../controllers/product.service";
+import {auth} from "../../auth/auth";
+import {IProductService, ProductService} from "../../service/product.service";
 
 const productService: IProductService = new ProductService();
 

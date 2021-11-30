@@ -8,7 +8,7 @@ import cors from "cors";
 import helmet from "helmet";
 import session from "express-session";
 import passport from "passport";
-import {addLocalStrategy} from "./config/passport";
+import {addLocalStrategy} from "./passport-config/passport";
 
 mongoose.Promise = global.Promise;
 const app = express()
@@ -37,15 +37,15 @@ try {
 }
 
 /** authentication */
-// require('./models/Users')
-// require('./config/passport');
-// app.use(require('./routes'));
-app.use(require('./routes'));
+// require('./repository/Users')
+// require('./passport-config/passport');
+// app.use(require('./controller'));
+app.use(require('./controller'));
 
 let port = 5000 || process.env.PORT
 
-/** set up routes {API Endpoints} */
-//routes(router) //////////////////////
+/** set up controller {API Endpoints} */
+//controller(router) //////////////////////
 
 /** set up middlewares */
 // app.use(cors());

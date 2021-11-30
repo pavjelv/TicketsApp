@@ -1,8 +1,8 @@
-import {OrderRepository} from "../models/OrderRepository"
-import {DetailedUser} from "../models/DetailedUser";
-import {SecureUser} from "../models/SecureUser";
+import {OrderRepository} from "../repository/order.repository"
+import {DetailedUser} from "../repository/detailed-user.repository";
+import {SecureUser} from "../repository/secure-user.repository";
 import {DetailedUserModel, SecureUserModel, OrderModel} from "@pavo/shared-services-shared/src";
-import {OrderDao} from "../models/dao/order.dao";
+import {OrderDao} from "../repository/dao/order.dao";
 import {NextFunction, Request, Response} from "express";
 
 export interface IOrderService {

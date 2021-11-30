@@ -1,10 +1,10 @@
 import passport from "passport";
 import express, {NextFunction, Request, Response} from "express";
-import {auth} from "../auth";
-import {SecureUser} from "../../models/SecureUser";
-import {DetailedUser} from "../../models/DetailedUser";
+import {auth} from "../../auth/auth";
+import {SecureUser} from "../../repository/secure-user.repository";
+import {DetailedUser} from "../../repository/detailed-user.repository";
 import {DetailedUserModel, SecureUserModel} from "@pavo/shared-services-shared/src";
-import {SecureUserDao} from "../../models/dao/secure-user.dao";
+import {SecureUserDao} from "../../repository/dao/secure-user.dao";
 
 const router = express.Router();
 

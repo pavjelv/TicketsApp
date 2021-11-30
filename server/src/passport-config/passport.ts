@@ -1,6 +1,6 @@
 import passport from "passport";
 import * as passportLocal from "passport-local";
-import {SecureUser} from "../models/SecureUser";
+import {SecureUser} from "../repository/secure-user.repository";
 import {SecureUserModel} from "@pavo/shared-services-shared/src";
 
 const LocalStrategy = passportLocal.Strategy;
