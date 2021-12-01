@@ -3,6 +3,8 @@ import {v4} from "uuid";
 import {HTTP_TIMEOUT} from "../constants/constants";
 import {CreateOrderScenario} from "./create-order";
 import * as userData from "../data/user-data.json";
+import {NavigationPanel} from "../page-models/navigation-panel";
+import {LoginPage} from "../page-models/login";
 
 export class ParticipateInOrderScenario {
     static readonly participateButtonSelector = Selector("#participateButton");
@@ -13,6 +15,9 @@ export class ParticipateInOrderScenario {
     static async participateInOrder(t: TestController, title?: string) {
         const name = title || "Title " + v4();
         await CreateOrderScenario.createOrder(t, name);
+        await NavigationPanel.navigateToButton("Sign Out");
+        await LoginPage.authUser();
+        await NavigationPanel.navigateToTab("All Orders");
         await t
             .click(CreateOrderScenario.orderCardTitle.withText(name)
                 .parent().find(".ant-card-extra a"))
@@ -26,7 +31,7 @@ export class ParticipateInOrderScenario {
             .expect(ParticipateInOrderScenario.leaveButtonSelector.exists)
             .ok();
         await t
-            .expect(ParticipateInOrderScenario.participantsListSelector.withText(userData.firstName + " " + userData.lastName).exists)
+            .expect(ParticipateInOrderScenario.participantsListSelector.withText(userData.user.firstName + " " + userData.user.lastName).exists)
             .ok()
     }
 }

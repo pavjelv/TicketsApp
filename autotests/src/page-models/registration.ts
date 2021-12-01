@@ -13,9 +13,9 @@ export class RegistrationPage {
     static async register(): Promise<void> {
         await t
             .typeText(RegistrationPage.emailField, authData.credentials.email)
-            .typeText(RegistrationPage.firstNameField, userData.firstName)
-            .typeText(RegistrationPage.lastNameField, userData.lastName)
-            .typeText(RegistrationPage.phoneField, userData.phone)
+            .typeText(RegistrationPage.firstNameField, userData.user.firstName)
+            .typeText(RegistrationPage.lastNameField, userData.user.lastName)
+            .typeText(RegistrationPage.phoneField, userData.user.phone)
             .typeText(RegistrationPage.passwordField, authData.credentials.password)
             .click(RegistrationPage.submitButton);
     }

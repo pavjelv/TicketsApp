@@ -6,7 +6,14 @@ export class LoginPage {
     static readonly emailField = Selector("#loginEmail");
     static readonly passwordField = Selector("#loginPassword");
 
-    static async auth(): Promise<void> {
+    static async authAdmin(): Promise<void> {
+        await t
+            .typeText(LoginPage.emailField, authData.adminCredentials.email)
+            .typeText(LoginPage.passwordField, authData.adminCredentials.password)
+            .click(LoginPage.loginButton);
+    }
+
+    static async authUser(): Promise<void> {
         await t
             .typeText(LoginPage.emailField, authData.credentials.email)
             .typeText(LoginPage.passwordField, authData.credentials.password)

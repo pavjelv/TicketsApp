@@ -14,7 +14,7 @@ export class CreateProductScenario {
 
     static async createProduct(t: TestController, title?: string) {
         const name = title || "Title " + v4();
-        await LoginPage.auth();
+        await LoginPage.authAdmin();
         await NavigationPanel.navigateToTab("All Products");
         await t
             .click(Selector("#newProductButton"))
