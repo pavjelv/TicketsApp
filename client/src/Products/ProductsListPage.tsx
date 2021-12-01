@@ -47,7 +47,8 @@ class ProductsListPage extends Component<any, ProductsState> {
             <div className="products-page-cards-container">
                 { userService.isAuthenticated() && (userService.hasRole('User') || userService.hasRole('Admin')) &&
                     <div style={{paddingBottom: "15px"}}>
-                        <Button type={"primary"}>
+                        <Button type={"primary"}
+                            id={"newProductButton"}>
                             <Link to='/newProduct'>
                                 New Product
                             </Link>
@@ -77,6 +78,7 @@ class ProductsListPage extends Component<any, ProductsState> {
                                     actions={[
                                         <Button
                                             type={"primary"}
+                                            className={"create-order-button"}
                                             onClick={() => this.createOrder(product._id)}
                                         >
                                             Create Order

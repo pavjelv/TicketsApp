@@ -1,8 +1,8 @@
 import passport from "passport";
 import express, {NextFunction, Request, Response} from "express";
 import {auth} from "../../auth/auth";
-import {SecureUser} from "../../repository/secure-user.repository";
-import {DetailedUser} from "../../repository/detailed-user.repository";
+import {SecureUserRepository} from "../../repository/secure-user.repository";
+import {DetailedUserRepository} from "../../repository/detailed-user.repository";
 import {DetailedUserModel, SecureUserModel} from "@pavo/shared-services-shared/src";
 import {SecureUserDao} from "../../repository/dao/secure-user.dao";
 
@@ -37,7 +37,7 @@ router.post('/', auth.optional, (req: Request, res: Response, next: NextFunction
     if (passportUser) {
       const user: SecureUserDao = passportUser;
       user.token = passportUser.generateJWT();
-      DetailedUser.find({"email": user.email}).then(((userDetails: DetailedUserModel[]) => {
+        DetailedUserRepository.find({"email": user.email}).then(((userDetails: DetailedUserModel[]) => {
             if(userDetails) {
                 let credentials = {
                     firstName : userDetails[0].firstName,
@@ -60,13 +60,13 @@ router.post('/', auth.optional, (req: Request, res: Response, next: NextFunction
 router.get('/current', auth.required, (req: Request, res: Response) => {
   // @ts-ignore
     const { payload: { id } } = req;
-  return SecureUser.findById(id)
+  return SecureUserRepository.findById(id)
     .then((user: SecureUserModel) => {
       if (!user) {
         return res.sendStatus(400);
       }
       console.log("user");
-      return SecureUser.find({"email" : user.email})
+      return SecureUserRepository.find({"email" : user.email})
       .then((usr: SecureUserModel)=> {
           res.send(usr)
       })

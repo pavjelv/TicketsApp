@@ -1,27 +1,30 @@
-import React from 'react';
-import {Link} from 'react-router-dom';
+import React, {Component} from 'react';
+import {Link, withRouter} from 'react-router-dom';
 import {userService} from '../Services/UserService';
 import {Menu, Layout, Button} from "antd";
 const { Header} = Layout;
 
-class NavBar extends React.Component<any, any> {
+class NavBar extends Component<any, any> {
     render() {
         return (
             <Header className="main-header">
                 <Menu
                     style={{minWidth: "20vw"}}
                     theme="dark"
+                    id="navbar"
                     mode="horizontal">
                     <Menu.Item
                         key="1">
-                        <Link to={`/`}>
+                        <Link to={`/`}
+                                className={"navbar-menu-item"}>
                             All Orders
                         </Link>
                     </Menu.Item>
                     {(userService.hasRole("Admin") || userService.hasRole("User")) &&
                     <Menu.Item
                         key="2">
-                        <Link to={`/products`}>
+                        <Link to={`/products`}
+                              className={"navbar-menu-item"}>
                             All Products
                         </Link>
                     </Menu.Item>
@@ -66,4 +69,4 @@ class NavBar extends React.Component<any, any> {
     }
 }
 
-export default NavBar;
+export default withRouter(NavBar);

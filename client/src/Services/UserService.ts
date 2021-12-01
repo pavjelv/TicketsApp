@@ -35,7 +35,7 @@ function register(model: RegistrationPageModel): Promise<CredentialsModel> {
         body: JSON.stringify(model)
     };
 
-    return fetch(`${api_url}/user/createUser`, requestOptions)
+    return fetch(`${api_url}/api/user/createUser`, requestOptions)
         .then(handleResponse)
         .then(credentials => {
             // login successful if there's a user in the response
@@ -58,7 +58,7 @@ function login(userEmail: string, userPassword: string): Promise<CredentialsMode
         })
     };
 
-    return fetch(`${api_url}/login`, requestOptions)
+    return fetch(`${api_url}/api/login`, requestOptions)
         .then(handleResponse)
         .then(credentials => { 
             // login successful if there's a user in the response

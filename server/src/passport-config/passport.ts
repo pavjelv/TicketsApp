@@ -1,6 +1,6 @@
 import passport from "passport";
 import * as passportLocal from "passport-local";
-import {SecureUser} from "../repository/secure-user.repository";
+import {SecureUserRepository} from "../repository/secure-user.repository";
 import {SecureUserModel} from "@pavo/shared-services-shared/src";
 
 const LocalStrategy = passportLocal.Strategy;
@@ -10,7 +10,7 @@ export function addLocalStrategy() {
         usernameField: 'email',
         passwordField: 'password',
     }, (email: string, password: string, done) => {
-        SecureUser.findOne({email})
+        SecureUserRepository.findOne({email})
             .then((user: SecureUserModel) => {
                 if (!user || !user.validatePassword(password)) {
                     return done(null, false, {message: 'email or password is invalid'});

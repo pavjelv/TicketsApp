@@ -72,18 +72,18 @@ class LoginPage extends React.Component<any, LoginPageState> {
                             required: true,
                             message: "Please, input your E-mail!"
                         }]}>
-                        <Input />
+                        <Input id="loginEmail" />
                     </Form.Item>
                     <Form.Item name="password" label="Password" rules={[
                         {
                             required: true,
                             message: "Please, input your password!"
                         }]}>
-                        <Input.Password />
+                        <Input.Password id="loginPassword" />
                     </Form.Item>
                     <Form.Item {...tailLayout}>
-                        <Button type="primary" htmlType="submit">
-                            Submit
+                        <Button type="primary" htmlType="submit" id="loginSubmit">
+                            Log In
                         </Button>
                     </Form.Item>
                 </Form>

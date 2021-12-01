@@ -105,24 +105,24 @@ class NewProduct extends Component<any, NewProductState> {
                             required: true,
                             message: "Please, input title!"
                         }]}>
-                        <Input />
+                        <Input id={"newProductTitleInput"}/>
                     </Form.Item>
                     <Form.Item name="description" label="Description">
-                        <Input />
+                        <Input id={"newProductDescriptionInput"}/>
                     </Form.Item>
                     <Form.Item name="price" label="Price" rules={[
                         {
                             required: true,
                             message: "Please, input price!"
                         }]}>
-                        <InputNumber style={{width: "100%"}} />
+                        <InputNumber style={{width: "100%"}} id={"newProductPriceInput"}/>
                     </Form.Item>
                     <Form.Item name="participantsAmount" label="Participants Amount" rules={[
                         {
                             required: true,
                             message: "Please, input Participants Amount!"
                         }]}>
-                        <InputNumber style={{width: "100%"}} />
+                        <InputNumber style={{width: "100%"}} id={"newProductParticipantsInput"} />
                     </Form.Item>
                     <Form.Item label="Image">
                         <Form.Item name="image" valuePropName="fileList" getValueFromEvent={this.normFile} noStyle>
@@ -140,7 +140,7 @@ class NewProduct extends Component<any, NewProductState> {
                         </Form.Item>
                     </Form.Item>
                     <Form.Item {...tailLayout}>
-                        <Button type="primary" htmlType="submit">
+                        <Button type="primary" id={"newProductSubmit"} htmlType="submit">
                             Submit
                         </Button>
                     </Form.Item>
