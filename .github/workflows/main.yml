@@ -28,4 +28,5 @@ jobs:
         run: |
           npm ci
           cd client
+          npm ci
           npm run build
