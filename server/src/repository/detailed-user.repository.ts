@@ -1,7 +1,7 @@
-import mongoose from 'mongoose';
+import {Schema, model} from "mongoose"
 import {DetailedUserModel} from "@pavo/shared-services-shared/src";
 
-const UserSchema = new mongoose.Schema<DetailedUserModel> (
+const UserSchema = new Schema<DetailedUserModel> (
     {
         firstName: String,
         lastName: String,
@@ -18,4 +18,4 @@ UserSchema.statics.getUser = function (firstName) {
     });
 }
 
-export const DetailedUserRepository = mongoose.model('DetailedUser', UserSchema);
+export const DetailedUserRepository = model('DetailedUser', UserSchema);

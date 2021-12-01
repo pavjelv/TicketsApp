@@ -2,197 +2,107 @@ import {OrderRepository} from "../repository/order.repository"
 import {DetailedUserRepository} from "../repository/detailed-user.repository";
 import {SecureUserRepository} from "../repository/secure-user.repository";
 import {DetailedUserModel, SecureUserModel, OrderModel} from "@pavo/shared-services-shared/src";
-import {OrderDao} from "../repository/dao/order.dao";
-import {NextFunction, Request, Response} from "express";
 
 export interface IOrderService {
-    addOrder: (req: Request, res: Response) => void;
-    addParticipant: (req: Request, res: Response) => void;
-    removeParticipant: (req: Request, res: Response) => void;
-    getAll: (_req: Request, res: Response, next: NextFunction) => void;
-    getOrder: (req: Request, res: Response, next: NextFunction) => void;
-    getMyOrders: (req: Request, res: Response) => void;
-    submit: (req: Request, res: Response) => void;
+    addOrder: (order: OrderModel) => Promise<OrderModel>;
+    addParticipant: (userId: string, orderId: string) => Promise<any>;
+    removeParticipant: (userId: string, orderId: string) => Promise<any>;
+    getAll: () => Promise<OrderModel[]>;
+    getOrder: (orderId: string) => Promise<OrderModel | null>;
+    getMyOrders: (userId: string) => Promise<OrderModel[]>;
+    submit: (userId: string, orderId: string) => Promise<any>;
 }
 
 export class OrderService implements IOrderService {
 
-    addOrder(req: Request, res: Response): void {
-        let order = ({
-            product: req.body.product,
-            isSubmitted: false
-        })
-
+     addOrder(order: OrderModel): Promise<OrderModel> {
         const finalOrder = new OrderRepository(order);
-        return finalOrder.save((err: unknown, order: OrderDao): any => {
-            if (err) {
-                res.status(500).send(err);
-            } else if (!order) {
-                res.status(400).send();
-            }
-            res.status(200).send();
-        })
+        return finalOrder.save();
     }
 
-    addParticipant(req: Request, res: Response): void {
-        // @ts-ignore
-        const { payload: { id } } = req;
-        SecureUserRepository.findById(id).then((user: SecureUserModel) => {
-            DetailedUserRepository.find({"email" : user.email}).then((userProps: DetailedUserModel[]) => {
-                const orderId = req.body.orderId;
-                OrderRepository.findById(orderId)
+    addParticipant(userId: string, orderId: string): Promise<any> {
+        return SecureUserRepository.findById(userId).then((user: SecureUserModel) => {
+            return DetailedUserRepository.find({"email" : user.email}).then((userProps: DetailedUserModel[]) => {
+                return OrderRepository.findById(orderId)
                     .populate('product')
-                    .exec((err: unknown, order: OrderModel) => {
-                        if (err) {
-                            res.status(500).send();
-                            return;
-                        }
-                        if (!order.participants.map(p => p._id).includes(userProps[0]._id)) {
-                            if (order.participants?.length < order.product.participantsAmount) {
-                                OrderRepository.update({_id: orderId}, {$push: {participants: userProps[0]._id || ''}}, null, function (err: unknown) {
-                                    if (err) {
-                                        res.status(500).send(err);
-                                    }
-                                    res.status(200).send();
-                                })
-                            } else {
-                                res.status(500).json({
-                                    errors: {
-                                        participantsAmount: 'Too many participants!',
-                                    },
-                                });
+                    .exec()
+                    .then((order: OrderModel | null) => {
+                        if (order && !order.participants?.map(p => p._id).includes(userProps[0]._id)) {
+                            if (order.participants.length < order.product.participantsAmount) {
+                                return OrderRepository.updateOne({_id: orderId}, {$push: {participants: userProps[0]._id || ''}})
                             }
-                        } else {
-                            res.status(500).send(err);
                         }
-                    })
+                        return Promise.reject("Too many participants!");
+                    });
             });
         });
     }
 
-    removeParticipant(req: Request, res: Response): void {
-        // @ts-ignore
-        const { payload: { id } } = req;
-        SecureUserRepository.findById(id).then((user: SecureUserModel) => {
-            DetailedUserRepository.find({"email" : user.email}).then((userProps: DetailedUserModel[]) => {
-                const orderId = req.body.orderId;
-                OrderRepository.findById(orderId)
-                    .exec((err: unknown, order: OrderModel) => {
-                        if (err) {
-                            res.status(500).send();
-                            return;
-                        }
-                        if (order.participants.map(p => p._id).includes(userProps[0]._id)) {
-                            OrderRepository.update({_id: orderId}, {$pull: {participants: userProps[0]._id || ''}}, null, function (err: unknown) {
-                                if (err) {
-                                    res.status(500).send(err);
-                                }
-                                res.status(200).send();
-                            })
+    removeParticipant(userId: string, orderId: string): Promise<any> {
+        return SecureUserRepository.findById(userId).then((user: SecureUserModel) => {
+            return DetailedUserRepository.find({"email" : user.email}).then((userProps: DetailedUserModel[]) => {
+                return OrderRepository.findById(orderId)
+                    .exec()
+                    .then((order: OrderModel | null) => {
+                        if (order?.participants.map(p => p._id).includes(userProps[0]._id)) {
+                            return OrderRepository.updateOne({_id: orderId}, {$pull: {participants: userProps[0]._id || ''}});
                         } else {
-                            res.status(500).send();
-                        }
-                    })
-            });
-        });
-    }
-
-
-
-    getAll(_req: Request, res: Response, next: NextFunction): void {
-        OrderRepository.find({})
-            .populate('product')
-            .populate('participants')
-            .exec((err: unknown, orders: OrderModel[])=> {
-                if (err)
-                    res.status(500).send(err)
-                else if (!orders)
-                    res.status(404).send()
-                else
-                    res.send(orders)
-                next()
-            });
-    }
-
-    getOrder(req: Request, res: Response, next: NextFunction): void {
-        OrderRepository.findById(req.params.id)
-            .populate('product')
-            .populate('participants')
-            .exec((err: unknown, order: OrderModel)=> {
-                if (err)
-                    res.status(500).send(err)
-                else if (!order)
-                    res.status(404).send()
-                else
-                    res.send(order)
-                next()
-            })
-    }
-
-    getMyOrders(req: Request, res: Response): void {
-        // @ts-ignore
-        const { payload: { id } } = req;
-        SecureUserRepository.findById(id).then((user: SecureUserModel) => {
-            DetailedUserRepository.find({"email" : user.email}).then((userProps: DetailedUserModel[]) => {
-                OrderRepository.findById({})
-                    .exec((err: unknown, orders: OrderModel[]) => {
-                        if (err) {
-                            res.send(err);
-                        } else if (!orders) {
-                            res.status(404).send();
-                        } else {
-                            res.send(orders.filter((o) => o.participants.map(p => p._id).includes(userProps[0]._id)));
-                            res.status(200).send();
+                            return Promise.reject();
                         }
                     });
             });
         });
     }
 
+    getAll(): Promise<OrderModel[]> {
+        return OrderRepository.find({})
+            .populate('product')
+            .populate('participants')
+            .exec();
+    }
 
+    getOrder(orderId: string): Promise<OrderModel | null> {
+        return OrderRepository.findById(orderId)
+            .populate('product')
+            .populate('participants')
+            .exec();
+    }
 
-    submit(req: Request, res: Response): void {
-        // @ts-ignore
-        const { payload: { id } } = req;
-        SecureUserRepository.findById(id).then((user: SecureUserModel) => {
-            DetailedUserRepository.find({"email" : user.email}).then((userProps: DetailedUserModel[]) => {
-                const orderId = req.body.orderId;
-                OrderRepository.findById(orderId)
-                    .populate('product')
-                    .exec((err: unknown, order: OrderModel)=> {
-                        if (err) {
-                            res.status(500).send();
-                            return;
+    getMyOrders(userId: string): Promise<OrderModel[]> {
+        return SecureUserRepository.findById(userId).then((user: SecureUserModel) => {
+            return DetailedUserRepository.find({"email" : user.email}).then((userProps: DetailedUserModel[]) => {
+                return OrderRepository.find({})
+                    .exec()
+                    .then((orders: OrderModel[] | null) => {
+                        if (!orders) {
+                            return Promise.reject();
+                        } else {
+                            return Promise.resolve(orders.filter((o) => o.participants.map(p => p._id).includes(userProps[0]._id)))
                         }
-                        if (!order.isSubmitted) {
+                    });
+            });
+        });
+    }
+
+    submit(userId: string, orderId: string): Promise<any> {
+        return SecureUserRepository.findById(userId).then((user: SecureUserModel) => {
+            return DetailedUserRepository.find({"email" : user.email}).then((userProps: DetailedUserModel[]) => {
+                return OrderRepository.findById(orderId)
+                    .populate('product')
+                    .exec()
+                    .then((order: OrderModel | null)=> {
+                        if (!order?.isSubmitted) {
                             if (userProps[0].role === "Admin") {
-                                if (order.participants?.length === order.product.participantsAmount) {
-                                    OrderRepository.updateOne({_id: orderId}, {$set: {"isSubmitted": true}}, null, function (err: unknown) {
-                                        if (err) {
-                                            res.status(500).send(err);
-                                        }
-                                        res.status(200).send()
-                                    })
+                                if (order?.participants?.length === order?.product.participantsAmount) {
+                                    return OrderRepository.updateOne({_id: orderId}, {$set: {"isSubmitted": true}});
                                 } else {
-                                    res.status(500).json({
-                                        errors: {
-                                            participantsAmount: 'Not enough participants!',
-                                        },
-                                    });
+                                    return Promise.reject("Not enough participants!");
                                 }
                             } else {
-                                res.status(500).json({
-                                    errors: {
-                                        isSubmitted: 'Operation is forbidden!',
-                                    },
-                                });
+                                return Promise.reject("Operation is forbidden!");
                             }
                         } else {
-                            res.status(500).json({
-                                errors: {
-                                    isSubmitted: 'Submit operation is forbidden!',
-                                },
-                            });
+                            return Promise.reject("Submit operation is forbidden!");
                         }
                     })
             });

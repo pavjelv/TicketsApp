@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
+import {Schema, model} from "mongoose"
 import crypto from "crypto";
 import * as jwt from "jsonwebtoken";
 import {SecureUserDao} from "./dao/secure-user.dao";
 
-const UsersSchema = new mongoose.Schema<SecureUserDao>({
+const UsersSchema = new Schema<SecureUserDao>({
   email: String,
   hash: String,
   salt: String,
@@ -39,5 +39,5 @@ UsersSchema.methods.toAuthJSON = function() {
   };
 }
 
-export const SecureUserRepository = mongoose.model('SecureUser', UsersSchema);
+export const SecureUserRepository = model('SecureUser', UsersSchema);
 

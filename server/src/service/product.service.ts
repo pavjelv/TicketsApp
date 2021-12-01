@@ -1,70 +1,36 @@
-import {NextFunction, Request, Response} from "express";
 import {ProductRepository} from "../repository/product.repository";
 import {ProductModel} from "@pavo/shared-services-shared/src";
 
 export interface IProductService {
-    addProduct: (req: Request, res: Response, _next: NextFunction) => Response;
-    getAll: (_req: Request, res: Response, next: NextFunction) => void;
+    getAll: () => Promise<ProductModel[]>;
+    addProduct: (product: ProductModel) => Promise<ProductModel>;
 }
 
 export class ProductService implements IProductService {
 
-    getAll(_req: Request, res: Response, next: NextFunction): void {
-        ProductRepository.find({})
-            .exec((err: unknown, products: ProductModel[])=> {
-                if (err)
-                    res.status(500).send(err)
-                else if (!products)
-                    res.status(404).send()
-                else
-                    res.send(products)
-                next()
-            });
+    getAll(): Promise<ProductModel[]> {
+        return ProductRepository.find({})
+            .exec();
     }
 
-    addProduct(req: Request, res: Response, _next: NextFunction): Response {
-        let product = ({
-            title: req.body.title,
-            description: req.body.description,
-            price: req.body.price,
-            participantsAmount: req.body.participantsAmount,
-            fileName: req.body.fileName,
-        })
-
+    addProduct(product: ProductModel): Promise<ProductModel> {
         if (!product.title) {
-            return res.status(422).json({
-                errors: {
-                    title: 'is required',
-                },
-            });
+            return Promise.reject("title is required");
         }
 
         if (!product.description) {
-            return res.status(422).json({
-                errors: {
-                    description: 'is required',
-                },
-            });
+            return Promise.reject("description is required");
         }
 
         if (!product.price) {
-            return res.status(422).json({
-                errors: {
-                    price: 'is required',
-                },
-            });
+            return Promise.reject("price is required");
         }
 
         if (!product.participantsAmount) {
-            return res.status(422).json({
-                errors: {
-                    participantsAmount: 'is required',
-                },
-            });
+            return Promise.reject("participants amount is required");
         }
 
         const finalProduct = new ProductRepository(product);
-        return finalProduct.save()
-            .then(() => res.json(finalProduct));
+        return finalProduct.save();
     }
 }

@@ -1,43 +1,121 @@
-import express from "express";
+import express, {Request, Response} from "express";
 
 const router = express.Router();
 
 import {auth} from "../../auth/auth";
 import {IOrderService, OrderService} from "../../service/order.service";
+import {OrderModel} from "@pavo/shared-services-shared/src";
 
 const orderService: IOrderService = new OrderService();
 
 // stub
 export class OrderController {
-    addOrder() {
-        return new OrderService().addOrder({} as any, {} as any);
+    addOrder(req: Request, res: Response): void {
+        const order: OrderModel = ({
+            participants: [],
+            product: req.body.product,
+            isSubmitted: false
+        })
+        orderService.addOrder(order).then((order) => {
+            if (!order) {
+                res.status(400).send();
+            } else {
+                res.status(200).send();
+            }
+        }, (error) => {
+            res.status(500).send(error);
+        });
     }
-    
-    addParticipant() {}
 
-    removeParticipant() {}
+    addParticipant(req: Request, res: Response): void {
+        // @ts-ignore
+        const { payload: { id } } = req;
+        const orderId = req.body.orderId;
 
-    allOrders() {}
+        orderService.addParticipant(id, orderId).then(() => {
+            res.status(200).send();
+        }, (e) => {
+            res.status(500).send(e);
+        });
+    }
 
-    getOrder() {}
+    removeParticipant(req: Request, res: Response): void {
+        // @ts-ignore
+        const { payload: { id } } = req;
+        const orderId = req.body.orderId;
 
-    getMyOrders() {}
+        orderService.removeParticipant(id, orderId).then(() => {
+            res.status(200).send();
+        }, (e) => {
+            res.status(500).send(e);
+        });
+    }
 
-    submit() {}
+    allOrders(_req: Request, res: Response): void {
+        orderService.getAll().then((orders) => {
+            if (!orders || !orders.length) {
+                res.status(404).send();
+            } else {
+                res.send(orders);
+            }
+        }, (e) => {
+            res.status(500).send(e);
+        })
+    }
+
+    getOrder(req: Request, res: Response): void {
+        const orderId = req.params.id;
+        orderService.getOrder(orderId).then((order) => {
+            if (!order) {
+                res.status(404).send();
+            } else {
+                res.send(order);
+            }
+        }, (e) => {
+            res.status(500).send(e);
+        })
+    }
+
+    getMyOrders(req: Request, res: Response): void {
+        // @ts-ignore
+        const { payload: { id } } = req;
+        orderService.getMyOrders(id).then((orders) => {
+            if (!orders || !orders.length) {
+                res.status(404).send();
+            } else {
+                res.send(orders);
+            }
+        }, (e) => {
+            res.status(500).send(e);
+        })
+    }
+
+    submit(req: Request, res: Response): void {
+        // @ts-ignore
+        const { payload: { id } } = req;
+        const orderId = req.body.orderId;
+        orderService.submit(id, orderId).then(() => {
+            res.status(200).send();
+        }, (e) => {
+            res.status(500).send(e);
+        })
+    }
 }
 
-router.post('/addOrder', auth.required, orderService.addOrder)
+const orderController = new OrderController();
 
-router.put('/addParticipant', auth.required, orderService.addParticipant)
+router.post('/addOrder', auth.required, orderController.addOrder)
 
-router.put('/removeParticipant', auth.required, orderService.removeParticipant)
+router.put('/addParticipant', auth.required, orderController.addParticipant)
 
-router.get('/allOrders', auth.optional, orderService.getAll)
+router.put('/removeParticipant', auth.required, orderController.removeParticipant)
 
-router.get('/getOrder/:id', auth.optional, orderService.getOrder)
+router.get('/allOrders', auth.optional, orderController.allOrders)
 
-router.get('/getMyOrders', auth.required, orderService.getMyOrders)
+router.get('/getOrder/:id', auth.optional, orderController.getOrder)
 
-router.put('/submit', auth.required, orderService.submit)
+router.get('/getMyOrders', auth.required, orderController.getMyOrders)
+
+router.put('/submit', auth.required, orderController.submit)
 
 module.exports = router;

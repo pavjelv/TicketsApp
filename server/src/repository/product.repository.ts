@@ -1,8 +1,7 @@
-import mongoose from 'mongoose';
-import {ProductDao} from "./dao/product.dao";
-const Schema = mongoose.Schema;
+import {Schema, model} from "mongoose"
+import {ProductModel} from "@pavo/shared-services-shared/src";
 
-const ProductSchema = new Schema<ProductDao>({
+const ProductSchema = new Schema<ProductModel>({
     title: {
         type: String,
         required: true
@@ -28,5 +27,5 @@ export interface IProductRepository {
 
 }
 
-export const ProductRepository = mongoose.model('Product', ProductSchema);
+export const ProductRepository = model('Product', ProductSchema);
 

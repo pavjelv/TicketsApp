@@ -1,8 +1,7 @@
-import mongoose from 'mongoose';
-import {OrderDao} from "./dao/order.dao";
-const Schema = mongoose.Schema;
+import {Schema, model} from "mongoose"
+import {OrderModel} from "@pavo/shared-services-shared/src";
 
-const OrderSchema = new Schema<OrderDao>({
+const OrderSchema = new Schema<OrderModel>({
     product : {
         type: Schema.Types.ObjectId,
         ref: 'Product'
@@ -21,4 +20,4 @@ export interface IOrderRepository {
 
 }
 
-export const OrderRepository = mongoose.model('Order', OrderSchema);
+export const OrderRepository = model<OrderModel>('Order', OrderSchema);

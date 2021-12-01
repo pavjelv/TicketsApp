@@ -3,7 +3,7 @@ import {ProductModel} from "./product.model";
 import {DetailedUserModel} from "./user-details.model";
 
 export interface OrderModel {
-    _id: string;
+    _id?: string;
     participants: DetailedUserModel[];
     product: ProductModel;
     isSubmitted: boolean;
