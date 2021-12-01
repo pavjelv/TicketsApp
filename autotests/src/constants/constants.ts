@@ -1,4 +1,4 @@
-export const HTTP_TIMEOUT = 4000;
+export const HTTP_TIMEOUT = 3000;
 const TEST_EXECUTOR_COUNT = 1;
 
 export function repeatTest(testName: string, fn:(t: TestController) => Promise<any>) {

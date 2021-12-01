@@ -7,8 +7,8 @@ import {NavigationPanel} from "../page-models/navigation-panel";
 export class CreateOrderScenario {
     static readonly orderCardTitle = Selector(".orders-page-cards-container .ant-card-head-title")
 
-    static async createOrder(t: TestController) {
-        const name = "Title" + v4();
+    static async createOrder(t: TestController, title?: string) {
+        const name = title || "Title " + v4();
         await CreateProductScenario.createProduct(t, name);
         await t
             .click(CreateProductScenario.productCardTitle.withText(name)

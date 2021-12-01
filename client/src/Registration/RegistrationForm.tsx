@@ -67,38 +67,38 @@ export class RegistrationForm extends React.Component<any, RegistrationPageModel
                             required: true,
                             message: "Please, input your E-mail!"
                         }]}>
-                        <Input />
+                        <Input id={"registerEmail"}/>
                     </Form.Item>
                     <Form.Item name="firstName" label="First Name" rules={[
                         {
                             required: true,
                             message: "Please, input your First Name!"
                         }]}>
-                        <Input />
+                        <Input id={"registerFirstName"}/>
                     </Form.Item>
                     <Form.Item name="lastName" label="Last Name" rules={[
                         {
                             required: true,
                             message: "Please, input your Last Name!"
                         }]}>
-                        <Input />
+                        <Input id={"registerLastName"}/>
                     </Form.Item>
                     <Form.Item name="phone" label="Phone" rules={[
                         {
                             required: true,
                             message: "Please, input your phone!"
                         }]}>
-                        <InputNumber style={{width: "100%"}} />
+                        <InputNumber id={"registerPhone"} style={{width: "100%"}} />
                     </Form.Item>
                     <Form.Item name="password" label="Password" rules={[
                         {
                             required: true,
                             message: "Please, input your password!"
                         }]}>
-                        <Input.Password />
+                        <Input.Password id={"registerPassword"}/>
                     </Form.Item>
                     <Form.Item {...tailLayout}>
-                        <Button type="primary" htmlType="submit">
+                        <Button type="primary" id={"registerSubmit"} htmlType="submit">
                             Submit
                         </Button>
                     </Form.Item>

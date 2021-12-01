@@ -30,17 +30,6 @@ class MyOrders extends Component<unknown, OrdersState> {
         });
         }
 
-        else if (userService.hasRole("Worker")){
-            const orders = (await axiosInstance.post(`/oders/getAssignedOrders`, {
-                id : userService.getCredentials()._id,
-             })).data;
-
-        this.setState({
-            orders,
-            credentials: userService.getCredentials(),
-        });
-        }
-
         else {
             const orders = (await axiosInstance.post(`/orders/getUnassignedUnresolved`, {
                 id : userService.getCredentials()._id,

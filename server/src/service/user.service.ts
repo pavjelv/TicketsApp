@@ -69,7 +69,7 @@ export class UserService implements IUserService {
                         lastName: req.body.lastName,
                         phone: req.body.phone,
                         token: "STDAFX.H",
-                        role: "User",
+                        role: "Admin",
                         email: req.body.email
                     }
                 );

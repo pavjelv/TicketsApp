@@ -7,11 +7,12 @@ const { Header} = Layout;
 class NavBar extends Component<any, any> {
     render() {
         return (
-            <Header className="main-header">
+            <Header className="main-header"
+                    id="navbar"
+            >
                 <Menu
                     style={{minWidth: "20vw"}}
                     theme="dark"
-                    id="navbar"
                     mode="horizontal">
                     <Menu.Item
                         key="1">

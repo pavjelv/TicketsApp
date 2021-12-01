@@ -5,7 +5,7 @@
   "main": "./index.js",
   "private": true,
   "scripts": {
-    "test": "node --max-http-header-size=80000 ./node_modules/testcafe/bin/testcafe ./tests || exit 0"
+    "test": "node --max-http-header-size=80000 ./node_modules/testcafe/bin/testcafe ./tests/01-Gold  --stop-on-first-fail || exit 0"
   },
   "author": "",
   "license": "ISC",

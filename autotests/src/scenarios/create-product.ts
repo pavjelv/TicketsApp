@@ -13,7 +13,7 @@ export class CreateProductScenario {
     static readonly productCardTitle = Selector(".products-page-cards-container .ant-card-head-title")
 
     static async createProduct(t: TestController, title?: string) {
-        const name = title || "Title" + v4();
+        const name = title || "Title " + v4();
         await LoginPage.auth();
         await NavigationPanel.navigateToTab("All Products");
         await t

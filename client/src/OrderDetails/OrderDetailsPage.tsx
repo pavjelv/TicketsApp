@@ -99,10 +99,10 @@ class OrderDetailsPage extends Component<any, {order: OrderModel}> {
                   size={"default"}
                   column={1}
                   extra={!order.isSubmitted && [!order.participants.find((p) => p._id === userService.getCredentials()._id)
-                      ? <Button key={1} type="primary" onClick={() => {
+                      ? <Button key={1} type="primary" id={"participateButton"} onClick={() => {
                         this.participate();
                       }}>Participate</Button>
-                      : <Button key={2} type="primary" danger onClick={() => {
+                      : <Button key={2} type="primary" danger id={"leaveButton"} onClick={() => {
                         this.leave();
                       }}>Leave</Button>,
                       (order.participants.length === order.product.participantsAmount) &&
@@ -119,7 +119,7 @@ class OrderDetailsPage extends Component<any, {order: OrderModel}> {
                 <Descriptions.Item
                     label="Required number of participants">{order.product.participantsAmount}</Descriptions.Item>
                 <Descriptions.Item label="Participants">{order.participants?.map((participant) => (
-                    <p key={participant._id}>{participant.firstName + " " + participant.lastName}</p>
+                    <p className={"order-details__participant"} key={participant._id}>{participant.firstName + " " + participant.lastName}</p>
                 ))}</Descriptions.Item>
               </Descriptions></>
           )
