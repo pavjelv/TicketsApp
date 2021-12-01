@@ -26,6 +26,6 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run build of frontend package
         run: |
-          npm ci
+          npm install
           cd client
           npm run build
