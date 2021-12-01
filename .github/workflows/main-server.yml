@@ -27,7 +27,7 @@ jobs:
       - name: Change directory
         run: |
           cd server
-          ls - la
+          ls -la
 
       # Runs a set of commands using the runners shell
       - name: Run build
