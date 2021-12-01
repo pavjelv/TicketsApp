@@ -27,4 +27,5 @@ jobs:
       - name: Run build of frontend package
         run: |
           cd client
+          npm ci
           npm run build

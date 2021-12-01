@@ -4,7 +4,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@pavo/shared-services-shared": "0.1.0",
     "antd": "^4.16.13",
     "axios": "^0.21.2",
     "react": "^16.6.3",
