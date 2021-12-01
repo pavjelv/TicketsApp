@@ -25,7 +25,9 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Change directory
-        run: cd server
+        run: |
+          cd server
+          ls - la
 
       # Runs a set of commands using the runners shell
       - name: Run build
