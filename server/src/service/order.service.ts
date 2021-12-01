@@ -1,6 +1,6 @@
 import {OrderRepository} from "../repository/order.repository"
-import {DetailedUser} from "../repository/detailed-user.repository";
-import {SecureUser} from "../repository/secure-user.repository";
+import {DetailedUserRepository} from "../repository/detailed-user.repository";
+import {SecureUserRepository} from "../repository/secure-user.repository";
 import {DetailedUserModel, SecureUserModel, OrderModel} from "@pavo/shared-services-shared/src";
 import {OrderDao} from "../repository/dao/order.dao";
 import {NextFunction, Request, Response} from "express";
@@ -37,8 +37,8 @@ export class OrderService implements IOrderService {
     addParticipant(req: Request, res: Response): void {
         // @ts-ignore
         const { payload: { id } } = req;
-        SecureUser.findById(id).then((user: SecureUserModel) => {
-            DetailedUser.find({"email" : user.email}).then((userProps: DetailedUserModel[]) => {
+        SecureUserRepository.findById(id).then((user: SecureUserModel) => {
+            DetailedUserRepository.find({"email" : user.email}).then((userProps: DetailedUserModel[]) => {
                 const orderId = req.body.orderId;
                 OrderRepository.findById(orderId)
                     .populate('product')
@@ -73,8 +73,8 @@ export class OrderService implements IOrderService {
     removeParticipant(req: Request, res: Response): void {
         // @ts-ignore
         const { payload: { id } } = req;
-        SecureUser.findById(id).then((user: SecureUserModel) => {
-            DetailedUser.find({"email" : user.email}).then((userProps: DetailedUserModel[]) => {
+        SecureUserRepository.findById(id).then((user: SecureUserModel) => {
+            DetailedUserRepository.find({"email" : user.email}).then((userProps: DetailedUserModel[]) => {
                 const orderId = req.body.orderId;
                 OrderRepository.findById(orderId)
                     .exec((err: unknown, order: OrderModel) => {
@@ -132,8 +132,8 @@ export class OrderService implements IOrderService {
     getMyOrders(req: Request, res: Response): void {
         // @ts-ignore
         const { payload: { id } } = req;
-        SecureUser.findById(id).then((user: SecureUserModel) => {
-            DetailedUser.find({"email" : user.email}).then((userProps: DetailedUserModel[]) => {
+        SecureUserRepository.findById(id).then((user: SecureUserModel) => {
+            DetailedUserRepository.find({"email" : user.email}).then((userProps: DetailedUserModel[]) => {
                 OrderRepository.findById({})
                     .exec((err: unknown, orders: OrderModel[]) => {
                         if (err) {
@@ -154,8 +154,8 @@ export class OrderService implements IOrderService {
     submit(req: Request, res: Response): void {
         // @ts-ignore
         const { payload: { id } } = req;
-        SecureUser.findById(id).then((user: SecureUserModel) => {
-            DetailedUser.find({"email" : user.email}).then((userProps: DetailedUserModel[]) => {
+        SecureUserRepository.findById(id).then((user: SecureUserModel) => {
+            DetailedUserRepository.find({"email" : user.email}).then((userProps: DetailedUserModel[]) => {
                 const orderId = req.body.orderId;
                 OrderRepository.findById(orderId)
                     .populate('product')

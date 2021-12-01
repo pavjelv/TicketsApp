@@ -18,4 +18,4 @@ UserSchema.statics.getUser = function (firstName) {
     });
 }
 
-export const DetailedUser = mongoose.model('DetailedUser', UserSchema);
+export const DetailedUserRepository = mongoose.model('DetailedUser', UserSchema);

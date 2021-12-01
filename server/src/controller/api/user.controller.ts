@@ -1,8 +1,20 @@
 import express from "express";
-import userService from "../../service/user.service";
+import {IUserService, UserService} from "../../service/user.service";
 import {auth} from "../../auth/auth";
 
+const userService: IUserService = new UserService();
 const router = express.Router();
+
+// stub
+export class UserController {
+    getUser() {
+        new UserService().getUser({} as any, {} as any, {} as any);
+    }
+
+    getAllUsers() {}
+
+    createUser() {}
+}
 
 router.post('/getUser', auth.required, userService.getUser)
  

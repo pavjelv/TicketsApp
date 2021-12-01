@@ -7,6 +7,25 @@ import {IOrderService, OrderService} from "../../service/order.service";
 
 const orderService: IOrderService = new OrderService();
 
+// stub
+export class OrderController {
+    addOrder() {
+        return new OrderService().addOrder({} as any, {} as any);
+    }
+    
+    addParticipant() {}
+
+    removeParticipant() {}
+
+    allOrders() {}
+
+    getOrder() {}
+
+    getMyOrders() {}
+
+    submit() {}
+}
+
 router.post('/addOrder', auth.required, orderService.addOrder)
 
 router.put('/addParticipant', auth.required, orderService.addParticipant)

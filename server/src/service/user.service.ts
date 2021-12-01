@@ -1,7 +1,7 @@
-import {DetailedUser} from "../repository/detailed-user.repository";
+import {DetailedUserRepository} from "../repository/detailed-user.repository";
 import {DetailedUserModel, SecureUserModel} from "@pavo/shared-services-shared/src";
 import {NextFunction, Request, Response} from "express";
-import {SecureUser} from "../repository/secure-user.repository";
+import {SecureUserRepository} from "../repository/secure-user.repository";
 
 export interface IUserService {
     getUser: (req: Request, res: Response, next: NextFunction) => unknown;
@@ -9,9 +9,9 @@ export interface IUserService {
     createUser: (req: Request, res: Response, _next: NextFunction) => unknown;
 }
 
-class UserService implements IUserService {
+export class UserService implements IUserService {
     getUser(req: Request, res: Response, next: NextFunction) {
-        DetailedUser.findById(req.body.id).exec((err: unknown, user: DetailedUserModel) => {
+        DetailedUserRepository.findById(req.body.id).exec((err: unknown, user: DetailedUserModel) => {
             if (err) {
                 return next(err);
             }
@@ -20,7 +20,7 @@ class UserService implements IUserService {
     }
 
     getAll(_req: Request, res: Response, next: NextFunction) {
-        return DetailedUser.find({}, function(err: unknown, user: DetailedUserModel[]) {
+        return SecureUserRepository.find({}, function(err: unknown, user: DetailedUserModel[]) {
             if (err) {
                 return next(err);
             }
@@ -57,13 +57,13 @@ class UserService implements IUserService {
             });
         }
 
-        const finalUser = new SecureUser(user);
+        const finalUser = new SecureUserRepository(user);
 
         finalUser.setPassword(user.password);
 
         return finalUser.save()
             .then((secureUser: SecureUserModel) => {
-                const user = new DetailedUser(
+                const user = new DetailedUserRepository(
                     {
                         firstName: req.body.firstName,
                         lastName: req.body.lastName,
@@ -88,5 +88,3 @@ class UserService implements IUserService {
             });
     }
 }
-
-export default new UserService();

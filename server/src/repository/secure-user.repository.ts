@@ -39,5 +39,5 @@ UsersSchema.methods.toAuthJSON = function() {
   };
 }
 
-export const SecureUser = mongoose.model('SecureUser', UsersSchema);
+export const SecureUserRepository = mongoose.model('SecureUser', UsersSchema);
 

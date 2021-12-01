@@ -7,7 +7,7 @@ export interface IProductService {
     getAll: (_req: Request, res: Response, next: NextFunction) => void;
 }
 
-export class ProductService {
+export class ProductService implements IProductService {
 
     getAll(_req: Request, res: Response, next: NextFunction): void {
         ProductRepository.find({})
