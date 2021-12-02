@@ -1,7 +1,7 @@
 import {clearDatabase, closeDatabase, connect} from "../db.setup";
 import {OrderModel, ProductModel} from "@pavo/shared-services-shared/src";
 import {ProductService} from "../../src/service/product.service";
-import {OrderService} from "../../dist/service/order.service";
+import {OrderService} from "../../src/service/order.service";
 
 const product: ProductModel = {
     title: "title MONGOOSE",
