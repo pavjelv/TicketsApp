@@ -5,7 +5,7 @@
         "lib": ["esnext", "dom"],
         "moduleResolution": "node",
         "allowJs": true,
-        "strict": true,
+        "strict": false,
         "allowSyntheticDefaultImports": true,
         "skipLibCheck": true,
         "noImplicitAny": true,
@@ -28,6 +28,6 @@
             "*": ["types/*"]
         }
     },
-    "include": ["src/**/*.ts"],
+    "include": ["src/**/*.ts", "../shared/src/**.ts"],
     "exclude": ["./types/", "./node_modules", "../../node_modules"]
 }

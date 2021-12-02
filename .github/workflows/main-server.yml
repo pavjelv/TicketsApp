@@ -28,8 +28,9 @@ jobs:
         run: |
           npm ci
           cd server
-          npm ci
           npm run build
 
       - name: Run test
-        run: npm run test
+        run: |
+          cd server
+          npm run test
