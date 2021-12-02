@@ -1,4 +1,4 @@
-import {MongoMemoryServer} from "mongodb-memory-server";
+import {MongoMemoryServer} from "mongodb-memory-server-core";
 // @ts-ignore
 import mongoose from "mongoose";
 
