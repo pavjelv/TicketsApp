@@ -1,6 +1,7 @@
 import {ProductService} from "../../src/service/product.service";
 import {ProductModel} from "@pavo/shared-services-shared/src";
 import {clearDatabase, closeDatabase, connect} from "../db.setup";
+jest.setTimeout(20000);
 
 beforeAll(async () => { await connect() });
 
