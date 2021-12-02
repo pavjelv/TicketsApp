@@ -27,11 +27,12 @@ addLocalStrategy();
 
 /** connect to MongoDB datastore */
 try {
+    // mongoose.set('debug', true)
     mongoose.connect(url, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         //useMongoClient: true
-    })    
+    });
 } catch (error) {
     console.log("error with connecting to database")
 }
