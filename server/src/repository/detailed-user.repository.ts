@@ -12,10 +12,4 @@ const UserSchema = new Schema<DetailedUserModel> (
     }
 )
 
-UserSchema.statics.getUser = function (firstName) {
-    this.find ({"firstName" : firstName}).then((user: DetailedUserModel) => {
-        return user
-    });
-}
-
-export const DetailedUserRepository = model('DetailedUser', UserSchema);
+export const DetailedUserRepository = model<DetailedUserModel>('DetailedUser', UserSchema);

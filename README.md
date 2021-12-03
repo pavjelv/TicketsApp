@@ -1,8 +1,7 @@
 # Together Cheaper
 
 [![CI Frontend](https://github.com/pavjelv/TicketsApp/actions/workflows/main.yml/badge.svg)](https://github.com/pavjelv/TicketsApp/actions/workflows/main.yml)
-[![CI Backend](https://github.com/pavjelv/TicketsApp/actions/workflows/main-server.yml/badge.svg?branch=master)](https://github.com/pavjelv/TicketsApp/actions/workflows/main-server.yml)
-
+[![CI Backend](https://github.com/pavjelv/TicketsApp/actions/workflows/main-server.yml/badge.svg)](https://github.com/pavjelv/TicketsApp/actions/workflows/main-server.yml)
 ## Front-end
 * [x] [React](https://reactjs.org/)
 * [x] [Ant Design](https://ant.design/)

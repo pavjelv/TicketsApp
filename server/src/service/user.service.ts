@@ -1,89 +1,53 @@
 import {DetailedUserRepository} from "../repository/detailed-user.repository";
-import {DetailedUserModel, SecureUserModel} from "@pavo/shared-services-shared/src";
-import {NextFunction, Request, Response} from "express";
+import {CredentialsModel, DetailedUserModel, SecureUserModel} from "@pavo/shared-services-shared/src";
 import {SecureUserRepository} from "../repository/secure-user.repository";
 
 export interface IUserService {
-    getUser: (req: Request, res: Response, next: NextFunction) => unknown;
-    getAll: (_req: Request, res: Response, next: NextFunction) => unknown;
-    createUser: (req: Request, res: Response, _next: NextFunction) => unknown;
+    getUser: (id: string) => Promise<DetailedUserModel>;
+    getAll: () => Promise<DetailedUserModel[]>;
+    createUser: (registrationModel: RegistrationModel) => Promise<CredentialsModel>;
+}
+
+export interface RegistrationModel extends DetailedUserModel {
+    password: string;
 }
 
 export class UserService implements IUserService {
-    getUser(req: Request, res: Response, next: NextFunction) {
-        DetailedUserRepository.findById(req.body.id).exec((err: unknown, user: DetailedUserModel) => {
-            if (err) {
-                return next(err);
-            }
-            res.send(user);
-        });
+    getUser(id: string): Promise<DetailedUserModel> {
+        return DetailedUserRepository.findById(id).exec();
     }
 
-    getAll(_req: Request, res: Response, next: NextFunction) {
-        return SecureUserRepository.find({}, function(err: unknown, user: DetailedUserModel[]) {
-            if (err) {
-                return next(err);
-            }
-            let usersToSend = [];
-            for(let i = 0; i < user.length; i++){
-                if(user[i].role != 'User'){
-                    usersToSend.push(user[i]);
-                }
-            }
-            res.send(usersToSend);
-            next();
-        })
+    getAll(): Promise<DetailedUserModel[]> {
+        return SecureUserRepository.find({}).exec();
     }
 
-   createUser(req: Request, res: Response, _next: NextFunction) {
-
-        let user = ({
-            email: req.body.email,
-            password: req.body.password
-        })
-        if (!user.email) {
-            return res.status(422).json({
-                errors: {
-                    email: 'is required',
-                },
-            });
+   createUser(registrationModel: RegistrationModel): Promise<CredentialsModel> {
+        if (!registrationModel.email) {
+            return Promise.reject("email is required");
         }
 
-        if (!user.password) {
-            return res.status(422).json({
-                errors: {
-                    password: 'is required',
-                },
-            });
+        if (!registrationModel.password) {
+            return Promise.reject("password is required");
         }
 
-        const finalUser = new SecureUserRepository(user);
+        const finalUser = new SecureUserRepository(registrationModel);
+        finalUser.setPassword(registrationModel.password);
 
-        finalUser.setPassword(user.password);
+        registrationModel.token = "STDAFX.H";
+        registrationModel.role = "User";
 
         return finalUser.save()
             .then((secureUser: SecureUserModel) => {
-                const user = new DetailedUserRepository(
-                    {
-                        firstName: req.body.firstName,
-                        lastName: req.body.lastName,
-                        phone: req.body.phone,
-                        token: "STDAFX.H",
-                        role: "Admin",
-                        email: req.body.email
-                    }
-                );
-
-                user.save()
+                const user = new DetailedUserRepository(registrationModel);
+                return user.save()
                     .then((userDetails: DetailedUserModel) => {
-                        let credentials = {
+                        const credentials = {
                             firstName : userDetails.firstName,
                             token : "Token=" + secureUser.generateJWT(),
                             role: userDetails.role,
                             _id : userDetails._id
                         }
-                        console.log(credentials)
-                        return res.json({credentials});
+                        return Promise.resolve(credentials);
                     });
             });
     }
