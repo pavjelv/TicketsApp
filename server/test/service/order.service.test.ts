@@ -2,7 +2,7 @@ import {clearDatabase, closeDatabase, connect} from "../db.setup";
 import {OrderModel, ProductModel} from "@pavo/shared-services-shared/src";
 import {ProductService} from "../../src/service/product.service";
 import {OrderService} from "../../src/service/order.service";
-jest.setTimeout(20000);
+jest.setTimeout(40000);
 
 const product: ProductModel = {
     title: "title MONGOOSE",
