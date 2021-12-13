@@ -31,9 +31,19 @@ const registrationModel2: RegistrationModel = {
     phone: 1231231
 };
 
+const registrationModel3: RegistrationModel = {
+    email: "aaa@a.com",
+    role: "Admin",
+    password: "1",
+    firstName: "Test First Name2",
+    lastName: "Last Name2",
+    phone: 1231212
+};
+
 let productId;
 let secureUserId;
 let secureUserId2;
+let secureUserId3;
 
 beforeAll(async () => { await connect() });
 
@@ -58,6 +68,15 @@ async function setUp() {
 
     const credentials2 = await new UserService().createUser(registrationModel2);
     secureUserId2 = await DetailedUserRepository.findById(credentials2._id)
+        .exec()
+        .then((detailedUser) => {
+            return SecureUserRepository.findOne({"email" : detailedUser.email})
+                .exec()
+                .then((user) => Promise.resolve(user._id));
+        });
+
+    const credentials3 = await new UserService().createUser(registrationModel3);
+    secureUserId3 = await DetailedUserRepository.findById(credentials3._id)
         .exec()
         .then((detailedUser) => {
             return SecureUserRepository.findOne({"email" : detailedUser.email})
@@ -164,5 +183,108 @@ describe("OrderService Test", () => {
         await expect(service.addParticipant(secureUserId, createdOrder._id)).rejects.toEqual("You are participant already!");
 
         await expect(service.addParticipant(secureUserId2, createdOrder._id)).rejects.toEqual("Too many participants!");
+    });
+
+    it("Should remove participants", async () => {
+        const service = new OrderService();
+        expect.assertions(2);
+        jest.spyOn(service, "removeParticipant");
+
+        const orderModel: OrderModel = {
+            participants: [],
+            isSubmitted: false,
+            product: productId,
+        }
+
+        const createdOrder = await service.addOrder(orderModel);
+        await service.addParticipant(secureUserId, createdOrder._id);
+        const document = await service.removeParticipant(secureUserId, createdOrder._id) as any;
+        const updatedOrder = await service.getOrder(createdOrder._id);
+
+        expect(document.nModified).toEqual(1);
+        expect(updatedOrder.participants.length).toEqual(0);
+    });
+
+    it("Should validate removing of participants", async () => {
+        const service = new OrderService();
+        expect.assertions(1);
+        jest.spyOn(service, "removeParticipant");
+
+        const orderModel: OrderModel = {
+            participants: [],
+            isSubmitted: false,
+            product: productId,
+        }
+
+        const createdOrder = await service.addOrder(orderModel);
+        await service.addParticipant(secureUserId, createdOrder._id);
+        await service.removeParticipant(secureUserId, createdOrder._id);
+        await expect(service.removeParticipant(secureUserId, createdOrder._id)).rejects.toEqual("You are not the participant of this order!");
+    });
+
+    it("Should submit order", async () => {
+        const service = new OrderService();
+        expect.assertions(2);
+        jest.spyOn(service, "submit");
+
+        const orderModel: OrderModel = {
+            participants: [],
+            isSubmitted: false,
+            product: productId,
+        }
+
+        const createdOrder = await service.addOrder(orderModel);
+        await service.addParticipant(secureUserId3, createdOrder._id);
+        const document = await service.submit(secureUserId3, createdOrder._id) as any;
+        const updatedOrder = await service.getOrder(createdOrder._id);
+
+        expect(document.nModified).toEqual(1);
+        expect(updatedOrder.isSubmitted).toEqual(true);
+    });
+
+    it("Should validate submission of the order with insufficient participants amount", async () => {
+        const service = new OrderService();
+        expect.assertions(1);
+        jest.spyOn(service, "submit");
+
+        const orderModel: OrderModel = {
+            participants: [],
+            isSubmitted: false,
+            product: productId,
+        }
+
+        const createdOrder = await service.addOrder(orderModel);
+        await expect(service.submit(secureUserId3, createdOrder._id)).rejects.toEqual("Not enough participants!");
+    });
+
+    it("Should validate submission of the submitted order", async () => {
+        const service = new OrderService();
+        expect.assertions(1);
+        jest.spyOn(service, "submit");
+
+        const orderModel: OrderModel = {
+            participants: [],
+            isSubmitted: false,
+            product: productId,
+        }
+
+        const createdOrder = await service.addOrder(orderModel);
+        await service.addParticipant(secureUserId3, createdOrder._id);
+        await service.submit(secureUserId3, createdOrder._id)
+        await expect(service.submit(secureUserId3, createdOrder._id)).rejects.toEqual("Submit operation is forbidden!");
+    });
+
+    it("Should validate order submission by user with non-Admin role", async () => {
+        const service = new OrderService();
+        expect.assertions(1);
+        jest.spyOn(service, "submit");
+
+        const orderModel: OrderModel = {
+            participants: [],
+            isSubmitted: false,
+            product: productId,
+        }
+        const createdOrder = await service.addOrder(orderModel);
+        await expect(service.submit(secureUserId, createdOrder._id)).rejects.toEqual("Operation is forbidden!");
     });
 });

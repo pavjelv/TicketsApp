@@ -30,7 +30,7 @@ export class CreateProductScenario {
         await t
             .typeText(CreateProductScenario.productTitleInput, name)
             .typeText(CreateProductScenario.productDescriptionInput, "Test Description")
-            .typeText(CreateProductScenario.productParticipantsInput, "2")
+            .typeText(CreateProductScenario.productParticipantsInput, "1")
             .typeText(CreateProductScenario.productPriceInput, "1000")
     }
 }

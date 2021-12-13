@@ -34,7 +34,9 @@ export class UserService implements IUserService {
         finalUser.setPassword(registrationModel.password);
 
         registrationModel.token = "STDAFX.H";
-        registrationModel.role = "User";
+        if (!registrationModel.role) {
+            registrationModel.role = "User";
+        }
 
         return finalUser.save()
             .then((secureUser: SecureUserModel) => {

@@ -76,20 +76,6 @@ export class OrderController {
         })
     }
 
-    getMyOrders(req: Request, res: Response): void {
-        // @ts-ignore
-        const { payload: { id } } = req;
-        orderService.getMyOrders(id).then((orders) => {
-            if (!orders || !orders.length) {
-                res.status(404).send();
-            } else {
-                res.send(orders);
-            }
-        }, (e) => {
-            res.status(500).send(e);
-        })
-    }
-
     submit(req: Request, res: Response): void {
         // @ts-ignore
         const { payload: { id } } = req;
@@ -113,8 +99,6 @@ router.put('/removeParticipant', auth.required, orderController.removeParticipan
 router.get('/allOrders', auth.optional, orderController.allOrders)
 
 router.get('/getOrder/:id', auth.optional, orderController.getOrder)
-
-router.get('/getMyOrders', auth.required, orderController.getMyOrders)
 
 router.put('/submit', auth.required, orderController.submit)
 

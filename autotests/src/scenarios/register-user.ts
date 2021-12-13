@@ -8,7 +8,7 @@ export class RegisterUserScenario {
         await RegistrationPage.register();
         await t
             .wait(HTTP_TIMEOUT)
-            .expect(NavigationPanel.navigationItems.withText("All Products").exists)
+            .expect(NavigationPanel.navigationItems.withText("All Orders").exists)
             .ok();
     }
 }
