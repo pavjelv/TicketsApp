@@ -15,7 +15,7 @@ function getCredentials(): CredentialsModel {
     // return {firstName: "", id: "", role: "", token: ""};
     const credentials = localStorage.getItem('credentials');
     if (credentials) {
-        return JSON.parse(credentials).credentials;
+        return JSON.parse(credentials);
     }
     return null;
 }
@@ -52,7 +52,7 @@ function login(userEmail: string, userPassword: string): Promise<CredentialsMode
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
             email : userEmail,
             password : userPassword
         })
@@ -60,10 +60,10 @@ function login(userEmail: string, userPassword: string): Promise<CredentialsMode
 
     return fetch(`${api_url}/api/login`, requestOptions)
         .then(handleResponse)
-        .then(credentials => { 
+        .then(credentials => {
             // login successful if there's a user in the response
             if (credentials) {
-                // store user details and basic auth credentials in local storage 
+                // store user details and basic auth credentials in local storage
                 // to keep user logged in between page refreshes
                 localStorage.setItem('credentials', JSON.stringify(credentials));
             }

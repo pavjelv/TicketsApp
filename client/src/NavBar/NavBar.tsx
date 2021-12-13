@@ -21,7 +21,7 @@ class NavBar extends Component<any, any> {
                             All Orders
                         </Link>
                     </Menu.Item>
-                    {(userService.hasRole("Admin") || userService.hasRole("User")) &&
+                    {userService.hasRole("Admin") &&
                     <Menu.Item
                         key="2">
                         <Link to={`/products`}

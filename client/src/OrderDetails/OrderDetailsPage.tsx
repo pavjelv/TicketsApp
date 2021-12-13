@@ -69,7 +69,7 @@ class OrderDetailsPage extends Component<any, {order: OrderModel}> {
 
       render(): ReactElement {
           const {order} = this.state;
-          if(order === null) return <p>Loading ...</p>;
+          if(!order) return <p>Loading ...</p>;
           return (
               <><Breadcrumb style={{paddingBottom: "10px"}}>
                 <Breadcrumb.Item>
@@ -98,21 +98,21 @@ class OrderDetailsPage extends Component<any, {order: OrderModel}> {
                   title={order.product.title}
                   size={"default"}
                   column={1}
-                  extra={!order.isSubmitted && [!order.participants.find((p) => p._id === userService.getCredentials()._id)
+                  extra={userService.getCredentials() && (!order.isSubmitted && [!order.participants.find((p) => p._id === userService.getCredentials()?._id)
                       ? <Button key={1} type="primary" id={"participateButton"} onClick={() => {
                         this.participate();
                       }}>Participate</Button>
                       : <Button key={2} type="primary" danger id={"leaveButton"} onClick={() => {
                         this.leave();
                       }}>Leave</Button>,
-                      (order.participants.length === order.product.participantsAmount) &&
+                      (userService.hasRole("Admin") && order.participants.length === order.product.participantsAmount) &&
                           <Button key={3}
                                   type="primary"
                                   style={{marginLeft: "10px"}}
                                   onClick={() => {
                               this.submit();
                           }}>Submit</Button>
-                  ]}
+                  ])}
               >
                 <Descriptions.Item label="Description">{order.product.description}</Descriptions.Item>
                 <Descriptions.Item label="Price">{order.product.price}</Descriptions.Item>

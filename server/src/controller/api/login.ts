@@ -47,10 +47,10 @@ router.post('/', auth.optional, (req: Request, res: Response, next: NextFunction
                 }
                 console.log(credentials)
                 //user.email = userDetails.firstName;
-                return res.json({credentials});
+                return res.send(credentials);
             }
             return res.status(401).send(info);
-      }))  
+      }))
     }
     else return res.status(401).send(info);
   })(req, res, next);
