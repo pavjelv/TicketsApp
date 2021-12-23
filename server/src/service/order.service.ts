@@ -20,8 +20,8 @@ export class OrderService implements IOrderService {
     }
 
     addParticipant(userId: string, orderId: string): Promise<unknown> {
-        return SecureUserRepository.findById(userId).then((user: SecureUserModel) => {
-            return DetailedUserRepository.findOne({"email" : user.email}).then((userProps: DetailedUserModel) => {
+        return SecureUserRepository.findById(userId).exec().then((user: SecureUserModel) => {
+            return DetailedUserRepository.findOne({"email" : user.email}).exec().then((userProps: DetailedUserModel) => {
                 return OrderRepository.findById(orderId)
                     .populate('product')
                     .exec()
@@ -39,8 +39,8 @@ export class OrderService implements IOrderService {
     }
 
     removeParticipant(userId: string, orderId: string): Promise<unknown> {
-        return SecureUserRepository.findById(userId).then((user: SecureUserModel) => {
-            return DetailedUserRepository.find({"email" : user.email}).then((userProps: DetailedUserModel[]) => {
+        return SecureUserRepository.findById(userId).exec().then((user: SecureUserModel) => {
+            return DetailedUserRepository.find({"email" : user.email}).exec().then((userProps: DetailedUserModel[]) => {
                 return OrderRepository.findById(orderId)
                     .exec()
                     .then((order: OrderModel | null) => {
@@ -69,8 +69,8 @@ export class OrderService implements IOrderService {
     }
 
     submit(userId: string, orderId: string): Promise<unknown> {
-        return SecureUserRepository.findById(userId).then((user: SecureUserModel) => {
-            return DetailedUserRepository.findOne({"email" : user.email}).then((userProps: DetailedUserModel) => {
+        return SecureUserRepository.findById(userId).exec().then((user: SecureUserModel) => {
+            return DetailedUserRepository.findOne({"email" : user.email}).exec().then((userProps: DetailedUserModel) => {
                 return OrderRepository.findById(orderId)
                     .populate('product')
                     .exec()
