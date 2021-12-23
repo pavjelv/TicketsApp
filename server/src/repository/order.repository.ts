@@ -7,7 +7,7 @@ const OrderSchema = new Schema<OrderModel>({
         ref: 'Product'
     },
     participants: [{
-      type: String,
+      type: Schema.Types.ObjectId,
       ref: "DetailedUser"
     }],
     isSubmitted: {
